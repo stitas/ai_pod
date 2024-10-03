@@ -1,0 +1,117 @@
+[
+    {
+        "id": 0,
+        "title": "t_shirt",
+        "title_lt": "Maikė",
+        "price": 19.99,
+        "position"
+        "colors": [
+            "black",
+            "cardinal",
+            "carolina_blue",
+            "charcoal",
+            "gold",
+            "irish_green",
+            "natural",
+            "navy",
+            "orange",
+            "white"
+        ],
+        "mockup_image_paths":[
+            "t_shirt\\black.png",
+            "t_shirt\\cardinal.png",
+            "t_shirt\\carolina_blue.png",
+            "t_shirt\\charcoal.png",
+            "t_shirt\\gold.png",
+            "t_shirt\\irish_green.png",
+            "t_shirt\\natural.png",
+            "t_shirt\\navy.png",
+            "t_shirt\\orange.png",
+            "t_shirt\\white.png"
+        ] 
+    },
+    {
+        "id": 1,
+        "title": "hoodie",
+        "title_lt": "Džemperis",
+        "price": 29.99,
+        "colors": [
+            "black",
+            "irish_green",
+            "light_pink",
+            "navy",
+            "red",
+            "royal",
+            "sport_grey",
+            "white"
+        ],
+        "mockup_image_paths":[
+            "hoodie\\black.png",
+            "hoodie\\irish_green.png",
+            "hoodie\\light_pink.png",
+            "hoodie\\navy.png",
+            "hoodie\\red.png",
+            "hoodie\\royal.png",
+            "hoodie\\sport_grey.png",
+            "hoodie\\white.png"
+        ] 
+    },
+    {
+        "id": 2,
+        "title": "sweatshirt",
+        "title_lt": "Megztinis",
+        "price": 27.99,
+        "colors": [
+            "black",
+            "irish_green",
+            "light_pink",
+            "navy",
+            "red",
+            "royal",
+            "sport_grey",
+            "white"
+        ],
+        "mockup_image_paths":[
+            "sweatshirt\\black.png",
+            "sweatshirt\\light_pink.png",
+            "sweatshirt\\navy.png",
+            "sweatshirt\\red.png",
+            "sweatshirt\\royal.png",
+            "sweatshirt\\sport_grey.png",
+            "sweatshirt\\white.png"
+        ] 
+    },
+    {
+        "id": 0,
+        "title": "tote_bag",
+        "title_lt": "Maišas",
+        "price": 24.99,
+        "colors": [
+            "black",
+            "oyster"
+        ],
+        "mockup_image_paths":[
+            "tote_bag\\black.png",
+            "tote_bag\\oyster.png"
+        ] 
+    },
+    {
+        "id": 0,
+        "title": "mug",
+        "title_lt": "Puodelis",
+        "price": 19.99,
+        "colors": [
+            "black",
+            "irish_green",
+            "light_pink",
+            "navy",
+            "red",
+            "royal",
+            "sport_grey",
+            "white"
+        ],
+        "mockup_image_paths":[
+            "mug\\mug.png"
+        ] 
+    }
+]
