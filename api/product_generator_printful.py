@@ -34,5 +34,3 @@ def create_product(image_url, variant_id, order_id, price):
     r = requests.post(URL, json=data, headers=HEADERS)
 
     return r.text
-
-print(create_product('https://i.imgur.com/i8XjKKG.jpeg', 10457, 1, 20))
