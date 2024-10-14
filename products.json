@@ -4,7 +4,10 @@
         "title": "t_shirt",
         "title_lt": "Maikė",
         "price": 19.99,
-        "position"
+        "position_mockup": {
+            "x": 156,
+            "y": 120
+        },
         "colors": [
             "black",
             "cardinal",
@@ -35,6 +38,10 @@
         "title": "hoodie",
         "title_lt": "Džemperis",
         "price": 29.99,
+        "position_mockup": {
+            "x": 156,
+            "y": 120
+        },
         "colors": [
             "black",
             "irish_green",
@@ -61,6 +68,10 @@
         "title": "sweatshirt",
         "title_lt": "Megztinis",
         "price": 27.99,
+        "position_mockup": {
+            "x": 156,
+            "y": 120
+        },
         "colors": [
             "black",
             "irish_green",
@@ -82,10 +93,14 @@
         ] 
     },
     {
-        "id": 0,
+        "id": 3,
         "title": "tote_bag",
         "title_lt": "Maišas",
         "price": 24.99,
+        "position_mockup": {
+            "x": 156,
+            "y": 210
+        },
         "colors": [
             "black",
             "oyster"
@@ -96,18 +111,15 @@
         ] 
     },
     {
-        "id": 0,
+        "id": 4,
         "title": "mug",
         "title_lt": "Puodelis",
         "price": 19.99,
+        "position_mockup": {
+            "x": 260,
+            "y": 210
+        },
         "colors": [
-            "black",
-            "irish_green",
-            "light_pink",
-            "navy",
-            "red",
-            "royal",
-            "sport_grey",
             "white"
         ],
         "mockup_image_paths":[

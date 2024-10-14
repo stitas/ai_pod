@@ -1,15 +1,12 @@
 from PIL import Image
 import os
 import json
-import datetime
 import io
 import base64
 
 parent_dir = os.path.abspath('..')
 product_data_json = open(os.path.join(parent_dir, 'products.json'))
 product_data = json.load(product_data_json)
-
-start = datetime.datetime.now()
 
 # Returns bytes of image
 def create_mockup(product_image_path, ai_image_path, position, product_id):
@@ -43,8 +40,9 @@ def create_mockup(product_image_path, ai_image_path, position, product_id):
 
     return img_base64_str
 
-def create_all_mockups():
-    mockup_byte_data = []
+# Function to get data of products ready for mockup generation
+def get_mockup_data(ai_image_url):
+    data = []
 
     for product in product_data:
         for i in range(len(product['mockup_image_paths'])):
@@ -52,6 +50,11 @@ def create_all_mockups():
             position = product['position_mockup']
             product_id = product['id']
 
-            mockup_byte_data.append(create_mockup(mockup_path, r'C:\Users\Titas\Desktop\ai_pod\api\1024x1024.png', position, product_id))
+            data.append({
+                'mockup_path': mockup_path,
+                'position': position,
+                'product_id': product_id,
+                'ai_image_url': ai_image_url
+            })
 
-    return mockup_byte_data
+    return data
