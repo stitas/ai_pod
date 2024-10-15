@@ -8,10 +8,14 @@ channel.queue_declare('mockup_generation_queue', durable=True)
 
 # TODO
 # finish mockupgeneration task
+# add multiprocessing
 
-def callback(ch, method, properties):
-    image = image_generation.generate_image()
-    product_info = mockup_generator.get_mockup_data()
+def callback(ch, method, properties, body):
+    prompt = body.decode()
+
+    image = image_generation.generate_image(prompt) # Returns image url
+    mockup_data = mockup_generator.get_mockup_data(image)
+
     ch.basic_ack(delivery_tag = method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
