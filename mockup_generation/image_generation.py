@@ -1,12 +1,12 @@
 import requests
 from dotenv import load_dotenv
-from os import environ
+import os
 import json
-import img_to_url
+from .img_to_url import upload_img_base64, upload_img_url
 
 load_dotenv()
 
-REPLICATE_TOKEN = environ.get('REPLICATE_TOKEN')
+REPLICATE_TOKEN = os.environ.get('REPLICATE_TOKEN')
 
 headers = {
     'Authorization': 'Bearer ' + REPLICATE_TOKEN,
@@ -54,7 +54,10 @@ def generate_image(prompt):
         response = requests.get(data['urls']['get'], headers=headers)
         data = json.loads(response.text)
 
-    url = img_to_url.upload_img_base64(data['output'][0])
+    base64_string = data['output'][0]
+    base64_string = base64_string.split(',', 1)[1] # Cut everything up to the first comma where the base64 string of image starts
+
+    url = upload_img_base64(base64_string)
 
     return url
 
@@ -75,7 +78,7 @@ def upscale_image(image_url):
         response = requests.get(data['urls']['get'], headers=headers)
         data = json.loads(response.text)
 
-    url = img_to_url.upload_img_url(data['output'])
+    url = upload_img_url(data['output'])
 
     return url
 

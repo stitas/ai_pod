@@ -8,6 +8,9 @@ PRINTFUL_TOKEN = environ.get('PRINTFUL_TOKEN')
 HEADERS = {'Authorization': 'Bearer ' + PRINTFUL_TOKEN, 'Content-Type': 'application/json', 'Accept': 'application/json'}
 URL = 'https://api.printful.com/store/products'
 
+# TODO
+# find a way to pass variant id when user selects the size and color
+
 # Created a new product in the printful shop 
 def create_product(image_url, variant_id, order_id, price):
     data = {
