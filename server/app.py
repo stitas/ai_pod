@@ -1,21 +1,60 @@
 from flask import Flask, jsonify, request
+from flask_jwt_extended import JWTManager, create_access_token
 import pika
 import pika.exceptions
-from models import db, Image, Mockup
+from models import db, bcrypt, Image, Mockup, User
 import json
 import os
 from dotenv import load_dotenv
+import datetime
 
 load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
-db.init_app(app)
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 
-@app.route('/')
-def index():
-    return 'index', 200
+db.init_app(app)
+bcrypt.init_app(app)
+jwt = JWTManager(app)
+
+@app.route('/register', methods=['POST'])
+def register():
+    if request.method == 'POST':
+        data = request.get_json(force=True)
+        user = User.query.filter_by(email=data['email']).first()
+
+        if user:
+            return jsonify({'error': 'User with this email already exists'}), 400
+        
+        user = User(data['email'], None, None)
+        user.set_password(data['password'])
+
+        db.session.add(user)
+        db.session.commit()
+
+        return jsonify('User created successfully'), 201
+            
+    else:
+        return jsonify({'error': 'Invalid request. Use POST request'}), 400
+    
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        data = request.get_json(force=True)
+        user = User.query.filter_by(email=data['email']).first()
+
+        # If user email or password is incorrect return
+        if not user or not user.check_password(data['password']):
+            return jsonify({'error': 'Invalid credentials'})
+        
+        access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=24))
+
+        return jsonify({'access_token': access_token}), 200
+
+    else:
+        return jsonify({'error': 'Invalid request. Use POST request'}), 400
 
 # Get image from the database by id
 @app.route('/get-image/<image_id>', methods=['GET'])

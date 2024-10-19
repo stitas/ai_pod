@@ -1,9 +1,45 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 # TODO
 # User modeli idet
+
+class User(db.Model):
+    __tablename__ = 'User'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), nullable=True)
+    password = db.Column(db.String, nullable=True)
+    oauth_provider = db.Column(db.String(100), nullable=True) # Facebook or Google
+    oauth_provider_id = db.Column(db.String, nullable=True)   
+    created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    last_login = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+    def __init__(self, email, oauth_provider, oauth_provider_id):
+        self.email = email
+        self.oauth_provider = oauth_provider
+        self.oauth_provider_id = oauth_provider_id
+
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password)
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)
+
+
+class Order(db.Model):
+    __tablename__ = 'Order'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+    price = db.Column(db.Double)
+    created = datetime.now()
+
+    def __init__(self, user_id, price):
+        self.user_id = user_id
+        self.price = price
 
 class Image(db.Model):
     __tablename__ = 'Image'
@@ -31,6 +67,7 @@ class Mockup(db.Model):
     mockup_image_url = db.Column(db.String(500))
     ai_image_id = db.Column(db.Integer, db.ForeignKey('Image.id'))
     printful_product_id = db.Column(db.Integer)
+    order_id = db.Column(db.Integer, db.ForeignKey('Order.id'))
 
     def __init__(self, title, price, color, mockup_image_url, ai_image_id, printful_product_id):
         self.title = title
