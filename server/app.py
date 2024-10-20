@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request
+import hashlib
+from flask import Flask, jsonify, request, redirect
 from flask_jwt_extended import JWTManager, create_access_token
 import pika
 import pika.exceptions
@@ -7,6 +8,7 @@ import json
 import os
 from dotenv import load_dotenv
 import datetime
+import requests
 
 load_dotenv()
 
@@ -49,6 +51,65 @@ def login():
         if not user or not user.check_password(data['password']):
             return jsonify({'error': 'Invalid credentials'})
         
+        user.last_login = datetime.datetime.utcnow()
+        db.session.commit()
+        
+        access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=24))
+
+        return jsonify({'access_token': access_token}), 200
+
+    else:
+        return jsonify({'error': 'Invalid request. Use POST request'}), 400
+    
+# Redirect to googles log in screen
+# After login google redirects to react frontend with authorization code in params
+@app.route('/login-google', methods=['GET'])
+def login_google():
+    state = hashlib.sha256(os.urandom(1024)).hexdigest()
+    nonce = hashlib.sha256(os.urandom(1024)).hexdigest() # To protect from replay attack
+    authorize_url = 'https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?'
+    args = f'response_type=code&access_type=offline&client_id={str(os.environ.get('GOOGLE_CLIENT_ID'))}&redirect_uri={str(os.environ.get('FRONTEND_URL'))}&scope=openid%20email%20profile&state={state}&nonce={nonce}'
+
+    url = authorize_url + args
+
+    return redirect(url)
+
+# Returns access token if google auth successful else 401 error code failed login
+# Checks if google auth successful by authorization code
+@app.route('/authorize-google', methods=['POST'])
+def authorize_google():
+    if request.method == 'POST':
+        data = request.get_json(force=True)
+        google_access_token_url='https://accounts.google.com/o/oauth2/token'
+        google_userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo'
+        
+        authorization_data = {
+            'code': data['authorization_code'],
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
+            'client_secret': os.environ.get('GOOGLE_CLIENT_SECRET'),
+            'redirect_uri': os.environ.get('FRONTEND_URL'),
+            'grant_type': 'authorization_code',
+            'access_type': 'offline'
+        }
+
+        response = requests.post(google_access_token_url, json=authorization_data).json()
+
+        if 'access_token' not in response:
+            return jsonify({'error': 'Failed to exchange authorization code for access token'}), 400
+        
+        google_access_token = response['access_token']
+
+        user_info = requests.post(google_userinfo_endpoint, headers={'Authorization': 'Bearer ' + google_access_token}).json()
+
+        user = User.query.filter_by(oauth_provider='google', oauth_provider_id=user_info['sub']).first()
+
+        if not user:
+            user = User(user_info['email'], oauth_provider='google', oauth_provider_id=user_info['sub'])
+            db.session.add(user)
+
+        user.last_login = datetime.datetime.utcnow()
+        db.session.commit()
+
         access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=24))
 
         return jsonify({'access_token': access_token}), 200

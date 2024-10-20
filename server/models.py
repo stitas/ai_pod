@@ -15,8 +15,8 @@ class User(db.Model):
     password = db.Column(db.String, nullable=True)
     oauth_provider = db.Column(db.String(100), nullable=True) # Facebook or Google
     oauth_provider_id = db.Column(db.String, nullable=True)   
-    created = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    last_login = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, email, oauth_provider, oauth_provider_id):
         self.email = email
@@ -35,7 +35,7 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
     price = db.Column(db.Double)
-    created = datetime.now()
+    created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __init__(self, user_id, price):
         self.user_id = user_id
