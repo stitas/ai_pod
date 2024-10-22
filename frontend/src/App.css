@@ -1,0 +1,23 @@
+:root {
+  --primary-color: #00ACD5;
+  --primary-color-darker: #02a8d1;
+  --primary-color-opacity: rgba(2, 157, 196, 0.671);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+}
+
+.primary-background {
+  background-color: var(--primary-color);
+}
+
+.solid-border-primary-darker {
+  border: solid 0.2rem var(--primary-color-darker);
+}

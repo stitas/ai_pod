@@ -1,0 +1,166 @@
+a {
+    border: none;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+}
+
+.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border-radius: 10rem; */
+    width: 100%;
+    margin-top: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+.nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    font-size: 1.2rem;
+}
+  
+.nav-item, .nav-log{
+    float: left;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.7rem;
+}
+
+.nav-item-right {
+    margin-left: auto;
+}
+
+.nav-link, .nav-logo {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+}
+
+.nav-logo {
+    padding-right: 0.2rem;
+}
+
+/* Hide the dropdown menu by default */
+.nav-list.mobile {
+    display: none;
+    flex-direction: column; /* Stack the items vertically */
+}
+
+/* Hamburger menu styles */
+.hamburger-react{
+    cursor: pointer;
+    font-size: 2rem;
+    color: white;
+}
+
+.burger-nav {
+    display: none;
+}
+
+.burger-nav-list {
+    display: none;
+}
+
+/* Show the hamburger menu and hide the nav items on smaller screens */
+@media (max-width: 768px) {
+    .nav-container {
+        width: 85%;
+    }
+
+    .hamburger-react{
+        display: block; /* Show the hamburger icon */
+        margin-left: auto;
+    }
+
+    .nav-list.mobile {
+        display: flex;
+        flex-direction: column; /* Show stacked items */
+        background-color: #333; /* Same color as the navbar */
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .burger-nav-list {
+        width: 90%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.2rem;
+    }
+
+    .nav-item{
+        display: none;
+    }
+
+    .nav-list {
+        display: none;
+    }
+
+    .navbar {
+        width: 100%;
+    }
+
+    .nav-container{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .burger-dropdown {
+        width: 100%;
+        height: 200%;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    }
+}
+
+.burger-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.burger-item{
+    float: right;
+    margin-left: auto;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    width: 100%;
+
+}
+
+.burger-link {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+}
+
+.logo {
+    width: 7rem;
+    height: 3.5rem;
+}

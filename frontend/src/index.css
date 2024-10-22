@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  src: local('Poppins'), url(./fonts/Poppins-Regular.ttf) format('opentype')
+}
+
+*{
+  padding:0;
+  margin:0;
+  font-family: 'Poppins', sans-serif;
+}
+
