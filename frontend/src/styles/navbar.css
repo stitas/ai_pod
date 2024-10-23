@@ -1,6 +1,4 @@
-a {
-    border: none;
-}
+@import './constants.css';
 
 .nav-container {
     display: flex;
@@ -10,6 +8,7 @@ a {
 }
 
 .navbar {
+    background-color: var(--primary-color);
     width: 100%;
     display: flex;
     justify-content: center;
@@ -30,7 +29,7 @@ a {
     font-size: 1.2rem;
 }
   
-.nav-item, .nav-log{
+.nav-item{
     float: left;
     display: inline-flex;
     justify-content: center;
@@ -123,7 +122,7 @@ a {
     }
 
     .burger-dropdown {
-        width: 100%;
+        width: 85%;
         height: 200%;
         box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
     }
@@ -145,11 +144,8 @@ a {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    border-bottom: none;
-    border-left: none;
-    border-right: none;
     width: 100%;
-
+    background-color: var(--primary-color-darker);
 }
 
 .burger-link {
@@ -158,6 +154,11 @@ a {
     text-align: center;
     padding: 0.5rem 1rem;
     text-decoration: none;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    background-color: var(--primary-color-darker);
+    border: solid 0.2rem var(--primary-color-darker-darker);
 }
 
 .logo {

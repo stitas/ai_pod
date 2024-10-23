@@ -1,6 +1,6 @@
 import logo from '../assets/logo_crop.png'
 import '../styles/navbar.css'
-import '../App.css'
+import '../index.css'
 import { PersonCircle, Images, BoxArrowInRight } from 'react-bootstrap-icons'
 import { useState } from 'react'
 import { Squash as Hamburger } from 'hamburger-react'
@@ -20,7 +20,7 @@ export default function Navbar({ name }) {
 
     return (
         <div className='nav-container'>
-            <nav className="navbar primary-background">
+            <nav className="navbar">
                 <div className="burger-nav-list">
                     <a className="nav-logo" href="#">
                         <img src={logo} alt="" className="logo"/>
@@ -65,27 +65,34 @@ export default function Navbar({ name }) {
             <div className="burger-dropdown">
                 { isMobileMenuOpen && width < 768 ? (
                     <ul className="burger-list">
-                        <li className="burger-item solid-border-primary-darker primary-background">
-                            <a className="burger-link" href="#">About</a>
-                        </li>
-                        <li className="burger-item solid-border-primary-darker primary-background ">
-                            <a className="burger-link" href="#">Gallery</a>
-                        </li>
-                        { name === '' ? (
-                            <li className="burger-item solid-border-primary-darker primary-background ">
-                                <a className="burger-link" href="#">Log In</a>
-                                
+                        <a className="burger-link" href="#">
+                            <li className="burger-item">
+                                About
                             </li>
+                        </a>
+                        <a className="burger-link" href="#">
+                            <li className="burger-item">
+                                Gallery
+                            </li>
+                        </a>
+                        { name === '' ? (
+                            <a className="burger-link" href="#">
+                                <li className="burger-item">
+                                    Log In
+                                </li>
+                            </a>
                         ) : (
                             <>
                                 <a className="burger-link" href="#">
-                                    <li className="burger-item solid-border-primary-darker primary-background ">
+                                    <li className="burger-item">
                                         My Gallery
                                     </li>
                                 </a>
-                                <li className="burger-item solid-border-primary-darker primary-background ">
-                                    <a className="burger-link" href="#">{name}</a>
-                                </li>
+                                <a className="burger-link" href="#">
+                                    <li className="burger-item">
+                                        {name}
+                                    </li>
+                                </a>
                             </>
                         )}
                     </ul>

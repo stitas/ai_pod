@@ -1,23 +1,24 @@
-:root {
-  --primary-color: #00ACD5;
-  --primary-color-darker: #02a8d1;
-  --primary-color-opacity: rgba(2, 157, 196, 0.671);
-}
-
-body {
-    margin: 0;
-    padding: 0;
-}
-
-#root {
+.main-container {
+  width: 90%;
+  text-align: center;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 5rem;
 }
 
-.primary-background {
-  background-color: var(--primary-color);
+#index-title{
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-top: 0.5rem;
 }
 
-.solid-border-primary-darker {
-  border: solid 0.2rem var(--primary-color-darker);
+#title-lower{
+  margin-top: 0.5rem;
+}
+
+.prompt-form {
+  width: 80%;
+  margin-top: 0.5rem;
 }

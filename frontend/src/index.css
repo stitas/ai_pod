@@ -1,12 +1,40 @@
-@font-face {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
-  src: local('Poppins'), url(./fonts/Poppins-Regular.ttf) format('opentype')
-}
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
+@import './styles/constants.css';
 
 *{
   padding:0;
   margin:0;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Sora', sans-serif;
 }
 
+body {
+    margin: 0;
+    padding: 0;
+}
+
+input[type=text]:focus{
+  border: solid 0.2rem var(--primary-color-darker-darker);
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.primary-background {
+  background-color: var(--primary-color);
+}
+
+.primary-darker-background {
+  background-color: var(--primary-color-darker);
+}
+
+.solid-border-primary {
+  border: solid 0.2rem var(--primary-color);
+}
+
+.solid-border-primary-darker-darker {
+  border: solid 0.2rem var(--primary-color-darker-darker);
+}
