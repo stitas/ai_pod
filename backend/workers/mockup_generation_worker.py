@@ -1,12 +1,11 @@
 import pika
-import mockup_generation
 import requests
 import json
 from dotenv import load_dotenv
 import os
 
-import mockup_generation.image_generation
-import mockup_generation.mockup_generator
+from  mockup_generation import image_generation
+from  mockup_generation import mockup_generator
 
 # TODO
 # finish mockupgeneration task
@@ -21,8 +20,8 @@ def callback(ch, method, properties, body):
     print('Received: ')
     print(data)
 
-    image = mockup_generation.image_generation.generate_image(data['prompt']) # Returns image url
-    mockup_data = mockup_generation.mockup_generator.get_mockup_data(image)
+    image = image_generation.generate_image(data['prompt']) # Returns image url
+    mockup_data = mockup_generator.get_mockup_data(image)
 
     for mockup in mockup_data:
         data_mockup = {
@@ -34,7 +33,7 @@ def callback(ch, method, properties, body):
             'printful_product_id': mockup['printful_product_id']
         }
 
-        requests.post(SERVER_URL + '/create-mockup/', json=data_mockup)
+        requests.post(SERVER_URL + '/create-mockup', json=data_mockup)
 
     data_image = {
         'ai_image_url': image

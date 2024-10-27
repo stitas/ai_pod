@@ -70,7 +70,7 @@ def get_mockup_data(ai_image_url):
             mockup_data.append({
                 'title': product['title_lt'],
                 'price': product['price'],
-                'color': product['colors'][i],
+                'color': product['colors_pretty'][i],
                 'printful_product_id': product['printful_product_id']
             })
 

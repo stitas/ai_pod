@@ -18,7 +18,7 @@ export default function App() {
 
     try {
         const data = {
-          text: inputText
+          prompt: inputText
         }
 
         // Send POST request to start the task

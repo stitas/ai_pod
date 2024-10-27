@@ -5,12 +5,18 @@ import { PersonCircle, Images, BoxArrowInRight } from 'react-bootstrap-icons'
 import { useState } from 'react'
 import { Squash as Hamburger } from 'hamburger-react'
 import { useEffect } from 'react'
-
+import { useNavigate } from 'react-router-dom'
 
 export default function Navbar({ name }) {
     const [isMobileMenuOpen, setMobileMenu] = useState(false)
 
     const [width, setWidth] = useState(window.innerWidth);
+
+    const navigate = useNavigate()
+
+    const goToIndex = () => {
+        navigate('/')
+    }
 
     useEffect(() => {
         const handleResize = () => setWidth(window.innerWidth);
@@ -22,7 +28,7 @@ export default function Navbar({ name }) {
         <div className='nav-container'>
             <nav className="navbar shadow">
                 <div className="burger-nav-list">
-                    <a className="nav-logo" href="#">
+                    <a className="nav-logo" onClick={goToIndex}>
                         <img src={logo} alt="" className="logo"/>
                     </a>
                     <Hamburger className="hamburger" toggled={isMobileMenuOpen} toggle={setMobileMenu} />
@@ -32,7 +38,7 @@ export default function Navbar({ name }) {
 
                 <ul className="nav-list">
                     <li className="nav-logo">
-                        <a href="#">
+                        <a onClick={goToIndex}>
                             <img src={logo} alt="" className="logo"/>
                         </a>
                     </li>

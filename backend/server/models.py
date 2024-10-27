@@ -51,7 +51,6 @@ class Image(db.Model):
         self.prompt = prompt
         self.url = url
 
-    @property
     def serialize(self):
         return {
             'prompt': self.prompt,
@@ -77,7 +76,6 @@ class Mockup(db.Model):
         self.ai_image_id = ai_image_id
         self.printful_product_id = printful_product_id
 
-    @property
     def serialize(self):
         return {
             'title': self.title,

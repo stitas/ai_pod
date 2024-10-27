@@ -22,6 +22,18 @@
             "orange",
             "white"
         ],
+        "colors_pretty": [
+            "Black",
+            "Cardinal",
+            "Carolina Blue",
+            "Charcoal",
+            "Gold",
+            "Irish Green",
+            "Natural",
+            "Navy",
+            "Orange",
+            "White"
+        ],
         "mockup_image_paths":[
             "t_shirt\\black.png",
             "t_shirt\\cardinal.png",
@@ -56,6 +68,16 @@
             "sport_grey",
             "white"
         ],
+        "colors_pretty": [
+            "Black",
+            "Irish Green",
+            "Light Pink",
+            "Navy",
+            "Red",
+            "Royal",
+            "Sport Grey",
+            "White"
+        ],
         "mockup_image_paths":[
             "hoodie\\black.png",
             "hoodie\\irish_green.png",
@@ -80,13 +102,21 @@
         },
         "colors": [
             "black",
-            "irish_green",
             "light_pink",
             "navy",
             "red",
             "royal",
             "sport_grey",
             "white"
+        ],
+        "colors_pretty": [
+            "Black",
+            "Light Pink",
+            "Navy",
+            "Red",
+            "Royal",
+            "Sport Grey",
+            "White"
         ],
         "mockup_image_paths":[
             "sweatshirt\\black.png",
@@ -113,6 +143,10 @@
             "black",
             "oyster"
         ],
+        "colors_pretty": [
+            "Black",
+            "Oyster"
+        ],
         "mockup_image_paths":[
             "tote_bag\\black.png",
             "tote_bag\\oyster.png"
@@ -131,6 +165,9 @@
         },
         "colors": [
             "white"
+        ],
+        "colors_pretty": [
+            "White"
         ],
         "mockup_image_paths":[
             "mug\\mug.png"

@@ -169,7 +169,7 @@ def update_image(image_id):
         return jsonify({'error': 'Invalid request. Use POST request'}), 400
 
 # Create a mockup
-@app.route('/create-mockup/', methods=['POST'])
+@app.route('/create-mockup', methods=['POST'])
 def create_mockup():
     if request.method == 'POST' and request.data:
         data = request.get_json(force=True)
@@ -224,7 +224,7 @@ def delete_mockup(mockup_id):
         return jsonify({'error': 'Invalid request. Use POST request'}), 404
 
 # Creates a mockup generation task with RabbitMQ and returns the image id to which mockups will be generated
-@app.route('/mockup-generator/create-task/', methods=['POST'])
+@app.route('/mockup-generator/create-task', methods=['POST'])
 def create_mockup_task():
     if request.method == 'POST':
         data = request.get_json(force=True)
