@@ -20,7 +20,7 @@ export default function Navbar({ name }) {
 
     return (
         <div className='nav-container'>
-            <nav className="navbar">
+            <nav className="navbar shadow">
                 <div className="burger-nav-list">
                     <a className="nav-logo" href="#">
                         <img src={logo} alt="" className="logo"/>
@@ -35,9 +35,6 @@ export default function Navbar({ name }) {
                         <a href="#">
                             <img src={logo} alt="" className="logo"/>
                         </a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">About</a>
                     </li>
                     <li className="nav-item">
                         <Images color="white" size={25}/>
@@ -62,14 +59,9 @@ export default function Navbar({ name }) {
                     )}
                 </ul>
             </nav>
-            <div className="burger-dropdown">
+            <div className="burger-dropdown shadow">
                 { isMobileMenuOpen && width < 768 ? (
                     <ul className="burger-list">
-                        <a className="burger-link" href="#">
-                            <li className="burger-item">
-                                About
-                            </li>
-                        </a>
                         <a className="burger-link" href="#">
                             <li className="burger-item">
                                 Gallery

@@ -12,29 +12,27 @@ body {
     padding: 0;
 }
 
-input[type=text]:focus{
-  border: solid 0.2rem var(--primary-color-darker-darker);
-}
+/* html, body, #root {
+    height: 100%;
+} */
 
 #root {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background: rgb(255,255,255);
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(240,252,255,1) 13%, rgba(236,251,255,1) 24%, rgba(208,246,255,1) 36%, rgba(191,242,255,1) 47%, rgba(170,238,255,1) 59%, rgba(155,236,255,1) 73%, rgba(147,235,255,1) 85%, rgba(135,233,255,1) 100%);  
 }
 
-.primary-background {
-  background-color: var(--primary-color);
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
 }
 
-.primary-darker-background {
-  background-color: var(--primary-color-darker);
-}
-
-.solid-border-primary {
-  border: solid 0.2rem var(--primary-color);
-}
-
-.solid-border-primary-darker-darker {
-  border: solid 0.2rem var(--primary-color-darker-darker);
+.shadow {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }

@@ -9,6 +9,7 @@ import os
 from dotenv import load_dotenv
 import datetime
 import requests
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -20,6 +21,8 @@ app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 db.init_app(app)
 bcrypt.init_app(app)
 jwt = JWTManager(app)
+
+CORS(app, origins=[os.environ.get('FRONTEND_URL')])
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -191,6 +194,21 @@ def get_mockup(mockup_id):
     
     else:
         return jsonify({'error': 'Mockup with such id was not found'}), 404
+    
+# Get mockup from database by id
+@app.route('/get-mockup-by-ai-image-id/<ai_image_id>', methods=['GET'])
+def get_mockup_by_ai_image_id(ai_image_id):
+    mockups = Mockup.query.filter_by(ai_image_id=ai_image_id).all()
+    data = []
+
+    if mockups:
+        for mockup in mockups:
+            data.append(mockup.serialize()) 
+
+        return jsonify(data), 200
+    
+    else:
+        return jsonify({'error': 'Mockup with such ai image id was not found'}), 404
 
 # Delete mockup from database by id
 @app.route('/delete-mockup/<mockup_id>', methods=['POST'])

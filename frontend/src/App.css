@@ -1,11 +1,21 @@
 .main-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.index-container {
   width: 90%;
   text-align: center;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
-  margin-top: 5rem;
+  margin-top: 7rem;
+  margin-bottom: 7rem;
 }
 
 #index-title{
@@ -21,4 +31,149 @@
 .prompt-form {
   width: 80%;
   margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.about-container {
+  background-color: white;
+  color: black;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 7rem;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.about-text {
+  width: 30%;
+  text-align: justify;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#about-robot-img {
+  width: 30rem;
+  height: 30rem;
+}
+
+#about-title {
+  font-size: 2.5rem;
+}
+
+#about-desc {
+  font-size: 1.2rem;
+}
+
+.btn-index {
+  text-align: center;
+  width: 30%;
+}
+
+.how-it-works-container {
+  margin-top: 7rem;
+  width: 85%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+.how-it-works-card-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.how-it-works-card {
+  height: 19rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: white;
+  padding: 2rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.how-it-works-title {
+  margin-bottom: 3rem;
+}
+
+#how-it-works-title {
+  font-size: 3.5rem;
+}
+
+#how-it-works-card-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.try-btn {
+  text-align: center;
+  width: 30%;
+  margin-top: 2rem;
+}
+
+#how-it-works-card-desc {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .about-container {
+    flex-direction: column;
+  }
+
+  .about-text {
+    width: 80%;
+    margin-top: 5rem;
+  }
+
+  #about-robot-img {
+    width: 25rem;
+    height: 25rem;
+  }
+
+  .how-it-works-container {
+    width: 100%;
+  }
+
+  #how-it-works-card-title {
+    text-align: center;
+  }
+
+  .how-it-works-card-container {
+    flex-direction: column;
+  }
+
+  .how-it-works-card {
+    width: 80%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .try-btn {
+    width: 70%;
+  }
+
+  .btn-index {
+    width: 100%;
+  }
 }
