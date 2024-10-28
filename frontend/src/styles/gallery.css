@@ -1,0 +1,68 @@
+.image-gallery {
+    width: 90%;
+    display: inline-grid;
+    grid-template-columns: auto auto auto;
+    justify-items: center;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.gallery-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.image-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50%;
+    height: 50%;
+    background-color: white;
+    padding: 0.4rem;
+    transition: 0.4s;
+    cursor: pointer;
+}
+
+.image-description {
+    width: 10rem;
+    position: absolute;
+    text-align: justify;
+    word-wrap: break-word;
+    visibility: hidden;
+    color: white;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.image-card:hover{
+    opacity: 0.7;
+}
+
+.image-card:hover + .image-description {
+    visibility: visible;
+}
+
+.image-description:hover {
+    visibility: visible;
+}
+
+.image-description:hover + .image-card {
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .image-gallery {
+        grid-template-columns: auto;
+        width: 100%;
+    }
+
+    .image-card {
+        width: 80%;
+        height: 80%;
+    }
+} 

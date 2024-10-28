@@ -1,8 +1,15 @@
 import InputAuth from '../components/input_auth'
 import Btn from '../components/btn'
 import '../styles/login.css'
+import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
+    const navigate = useNavigate()
+
+    const goToLogin = () => {
+        navigate('/login')
+    }
+
     return (
         <div className="container" style = {{height:"100vh"}}>
             <div className="login-container shadow">
@@ -29,7 +36,7 @@ export default function Register() {
                     </a>
                 </div>
                 <div className="register-anchor">
-                    <a href="#"> Already have an account ? Log in!</a>
+                    <a onClick={goToLogin}> Already have an account ? Log in!</a>
                 </div>
             </div>
         </div>

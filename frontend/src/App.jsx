@@ -12,6 +12,10 @@ export default function App() {
   const navigate = useNavigate()
   const serverUrl = import.meta.env.VITE_SERVER_URL
 
+  const goToRegister = () => {
+    navigate('/register')
+  }
+
   // Function to start the task
   const startTask = async () => {
     event.preventDefault()
@@ -109,7 +113,7 @@ export default function App() {
             </div>
           </div>
           <div className="try-btn">
-            <Btn value="TRY IT OUT" bgColor="white" textColor="black" hoverColor="gray"/>
+            <Btn value="TRY IT OUT" bgColor="white" textColor="black" hoverColor="gray" onClick={goToRegister}/>
           </div>
         </div>
       </div>

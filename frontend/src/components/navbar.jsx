@@ -1,7 +1,7 @@
 import logo from '../assets/logo_crop.png'
 import '../styles/navbar.css'
 import '../index.css'
-import { PersonCircle, Images, BoxArrowInRight } from 'react-bootstrap-icons'
+import { PersonCircle, Images, BoxArrowInRight, Cart } from 'react-bootstrap-icons'
 import { useState } from 'react'
 import { Squash as Hamburger } from 'hamburger-react'
 import { useEffect } from 'react'
@@ -16,6 +16,18 @@ export default function Navbar({ name }) {
 
     const goToIndex = () => {
         navigate('/')
+    }
+
+    const goToGallery = () => {
+        navigate('/gallery')
+    }
+
+    const goToLogin = () => {
+        navigate('/login')
+    }
+
+    const goToCart = () => {
+        navigate('/cart')
     }
 
     useEffect(() => {
@@ -44,13 +56,19 @@ export default function Navbar({ name }) {
                     </li>
                     <li className="nav-item">
                         <Images color="white" size={25}/>
-                        <a className="nav-link" href="#">Gallery</a>
+                        <a className="nav-link" onClick={goToGallery}>Gallery</a>
                     </li>
                     { name === '' ? (
-                        <li className="nav-item nav-item-right">
-                            <BoxArrowInRight color="white" size={25}/>
-                            <a className="nav-link" href="#">Log In</a>
-                        </li>
+                        <>
+                            <li className="nav-item nav-item-right">
+                                <Cart color="white" size={25}/>
+                                <a className="nav-link" onClick={goToCart}>Cart</a>
+                            </li>
+                            <li className="nav-item ">
+                                <BoxArrowInRight color="white" size={25}/>
+                                <a className="nav-link" href="#" onClick={goToLogin}>Log In</a>
+                            </li>
+                        </>
                     ) : (
                         <>
                             <li className="nav-item">
@@ -58,6 +76,10 @@ export default function Navbar({ name }) {
                                 <a className="nav-link" href="#">My Gallery</a>
                             </li>
                             <li className="nav-item nav-item-right">
+                                <Cart color="white" size={25}/>
+                                <a className="nav-link" onClick={goToCart}>Cart</a>
+                            </li>
+                            <li className="nav-item">
                                 <PersonCircle color="white" size={25}/>
                                 <a className="nav-link" href="#">{name}</a>
                             </li>
@@ -68,13 +90,13 @@ export default function Navbar({ name }) {
             <div className="burger-dropdown shadow">
                 { isMobileMenuOpen && width < 768 ? (
                     <ul className="burger-list">
-                        <a className="burger-link" href="#">
+                        <a className="burger-link" onClick={goToGallery}>
                             <li className="burger-item">
                                 Gallery
                             </li>
                         </a>
                         { name === '' ? (
-                            <a className="burger-link" href="#">
+                            <a className="burger-link" onClick={goToLogin}>
                                 <li className="burger-item">
                                     Log In
                                 </li>

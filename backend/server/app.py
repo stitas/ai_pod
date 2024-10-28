@@ -131,6 +131,30 @@ def get_image(image_id):
     
     else:
         return jsonify({'error': 'Image with such id was not found'}), 404
+    
+# Get all paginated imaages
+@app.route('/get-images-paginate/', methods=['GET'])
+def get_images_paginate():
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+
+    pagination = Image.query.paginate(page=page, per_page=per_page, error_out=False)
+
+    images = [image.serialize() for image in pagination.items]
+
+    if images:
+        return jsonify({
+            'images': images,
+            'total': pagination.total,  # Total number of items in the database
+            'page': pagination.page,  # Current page number
+            'per_page': pagination.per_page,  # Number of items per page
+            'pages': pagination.pages,  # Total number of pages
+            'has_next': pagination.has_next,  # If there's a next page
+            'has_prev': pagination.has_prev  # If there's a previous page   
+        }), 200
+    
+    else:
+        return jsonify({'error': 'Image with such id was not found'}), 404
 
 # Delete image from the database by id
 @app.route('/delete-image/<image_id>', methods=['POST'])

@@ -75,3 +75,14 @@
 #quantity-select:focus {
     outline: none;
 }
+
+@media (max-width: 768px) {
+    .product-info-container {
+        flex-direction: column;
+    }
+
+    .carousel-container {
+        width: 100%;
+        height: 100%;
+    }
+}
