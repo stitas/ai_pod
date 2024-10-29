@@ -1,6 +1,6 @@
 @import './constants.css';
 
-#input-auth {
+.input-auth {
     width: 70%;
     height: 3rem;
     font-size: 1.2rem;
@@ -10,7 +10,7 @@
     padding: 0.3rem;
 }
 
-#input-auth:focus {
+.input-auth:focus {
     outline: none;
     border: none;
 }

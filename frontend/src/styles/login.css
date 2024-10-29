@@ -65,3 +65,7 @@ hr {
         width: 80%;
     }
 }
+
+.form-error {
+    margin-top: 1rem;
+}

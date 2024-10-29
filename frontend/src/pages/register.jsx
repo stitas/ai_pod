@@ -2,29 +2,102 @@ import InputAuth from '../components/input_auth'
 import Btn from '../components/btn'
 import '../styles/login.css'
 import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 export default function Register() {
     const navigate = useNavigate()
+    const serverUrl = import.meta.env.VITE_SERVER_URL
+
+    const[email, setEmail] = useState('')
+    const[password1, setPassword1] = useState('')
+    const[password2, setPassword2] = useState('')
+    const[registerError, setRegisterError] = useState('')
+    const[passwordMatch, setPasswordMatch] = useState(false)
+
+    const register = async (event) => {
+        event.preventDefault()
+
+        try {
+            const data = {
+                email: email,
+                password: password1
+            }
+
+            const response = await axios.post(serverUrl + '/register', data)
+
+            if(response.status === 400){
+                setRegisterError('A user with such email already exists')
+            }
+            else {
+                navigate('/login')
+            }
+        }
+        catch (error){
+            console.log(error)
+        }
+    }
+
+    const loginGoogle = async () => {
+        try {
+            const response = await axios.get(serverUrl + '/login-google')
+
+            if(response.status === 200){
+                window.location.replace(response.data.redirect_url);
+            }
+        }
+        catch(error) {
+            console.error('Error starting task:', error);
+        }
+    }
+
+    const handleInputEmail = (event) => {
+        setEmail(event.target.value)
+    }
+
+    const handleInputPassword1 = (event) => {
+        setPassword1(event.target.value)
+    }
+
+    const handleInputPassword2 = (event) => {
+        setPassword2(event.target.value)
+    }
 
     const goToLogin = () => {
         navigate('/login')
     }
 
+    useEffect(() => {
+        if(password1 !== password2 && password2 !== ''){
+            setRegisterError('Passwords do not match')
+            setPasswordMatch(false)
+        }
+        else {
+            setRegisterError('')
+            setPasswordMatch(false)
+        }
+
+        if(password1 === password2){
+            setPasswordMatch(true)
+            setRegisterError('')
+        }
+    }, [password2])
+
     return (
         <div className="container" style = {{height:"100vh"}}>
             <div className="login-container shadow">
                 <h1>Sign up</h1>
-                <form action="#" method="post" className="login-form">
-                    <InputAuth placeholder={"Enter email"} type={"text"}/>
-                    <InputAuth placeholder={"Enter password"} type={"password"}/>
-                    <InputAuth placeholder={"Repeat password"} type={"password"}/>
+                <form method="post" className="login-form" onSubmit={register}>
+                    <InputAuth placeholder={"Enter email"} type={"text"} onChange={handleInputEmail}/>
+                    <InputAuth placeholder={"Enter password"} type={"password"} onChange={handleInputPassword1}/>
+                    <InputAuth placeholder={"Repeat password"} type={"password"} onChange={handleInputPassword2}/>
                     <div className="login-btn">
-                        <Btn value={"Sign Up"}/>
+                        <Btn value={"Sign Up"} disabled={!passwordMatch}/>
                     </div>
                 </form>
                 <hr />  
                 <div className="google-login-container">
-                    <a id="google-anchor" href="#">
+                    <a id="google-anchor" onClick={loginGoogle}>
                         <div className="google-login-btn shadow">
                             <div id="google-logo">
                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 48 48">
@@ -37,6 +110,9 @@ export default function Register() {
                 </div>
                 <div className="register-anchor">
                     <a onClick={goToLogin}> Already have an account ? Log in!</a>
+                </div>
+                <div className="form-error">
+                    <p style={{color: "red"}}>{registerError}</p>
                 </div>
             </div>
         </div>

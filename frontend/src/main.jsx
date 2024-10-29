@@ -7,6 +7,7 @@ import Register from './pages/register.jsx'
 import ProductList from './pages/product_list.jsx'
 import ProductInfo from './pages/product_info.jsx'
 import Gallery from './pages/gallery.jsx'
+import AuthenticateWait from './pages/authenticate_wait.jsx'
 import './index.css'
 
 createRoot(document.getElementById('root')).render(
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')).render(
         <Route path='/product-list' element={<ProductList/>}/>
         <Route path='/product-info' element={<ProductInfo/>}/>
         <Route path='/gallery' element={<Gallery/>}/>
+        <Route path='/authenticate-wait' element={<AuthenticateWait/>}/>
       </Routes>
     </BrowserRouter>
   </StrictMode>,

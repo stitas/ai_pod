@@ -1,29 +1,90 @@
 import InputAuth from '../components/input_auth'
 import Btn from '../components/btn'
 import '../styles/login.css'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 export default function Login() {
+    const location = useLocation();
     const navigate = useNavigate()
+    const serverUrl = import.meta.env.VITE_SERVER_URL
+    const googleError = location.state?.googleError; // Accessing data from the location state
+
+    console.log(googleError)
+
+    const[email, setEmail] = useState('')
+    const[password, setPassword] = useState('')
+    const[loginError, setLoginError] = useState('')
+
+    const login = async (event) => {
+        event.preventDefault()
+
+        try {
+            const data = {
+                email: email,
+                password: password
+            }
+    
+            const response = await axios.post(serverUrl + '/login', data)
+    
+            // check invalid credentials
+            if(response.status === 401){
+                setLoginError('Invalid credentials')
+            }
+            else {
+                navigate('/')
+            }
+        }
+        catch(error) {
+            console.error('Error starting task:', error);
+        }
+    }
+
+    const loginGoogle = async () => {
+        try {
+            const response = await axios.get(serverUrl + '/login-google')
+
+            if(response.status === 200){
+                window.location.replace(response.data.redirect_url);
+            }
+        }
+        catch(error) {
+            console.error('Error starting task:', error);
+        }
+    }
+
+
+    const handleInputEmail = (event) => {
+        setEmail(event.target.value)
+    }
+
+    const handleInputPassword = (event) => {
+        setPassword(event.target.value)
+    }
 
     const goToRegister = () => {
         navigate('/register')
     }
 
+    useEffect(() => {
+        setLoginError(googleError)
+    }, [])
+
     return (
         <div className="container" style = {{height:"100vh"}}>
             <div className="login-container shadow">
                 <h1>Login</h1>
-                <form action="#" method="post" className="login-form">
-                    <InputAuth placeholder={"Enter email"} type={"text"}/>
-                    <InputAuth placeholder={"Enter password"} type={"password"}/>
+                <form method="post" className="login-form" onSubmit={login}>
+                    <InputAuth placeholder={"Enter email"} type={"text"} onChange={handleInputEmail}/>
+                    <InputAuth placeholder={"Enter password"} type={"password"} onChange={handleInputPassword}/>
                     <div className="login-btn">
                         <Btn value={"Login"}/>
                     </div>
                 </form>
                 <hr />  
                 <div className="google-login-container">
-                    <a id="google-anchor" href="#">
+                    <a id="google-anchor" onClick={loginGoogle}>
                         <div className="google-login-btn shadow">
                             <div id="google-logo">
                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 48 48">
@@ -36,6 +97,9 @@ export default function Login() {
                 </div>
                 <div className="register-anchor">
                     <a onClick={goToRegister}> Dont have an account ? Sign up!</a>
+                </div>
+                <div className="form-error">
+                    <p style={{color: "red"}}>{loginError}</p>
                 </div>
             </div>
         </div>

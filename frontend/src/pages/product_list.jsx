@@ -43,7 +43,7 @@ export default function ProductList() {
 
     const getMockups = async (imageId) => {
         if(taskComplete) {
-            axios.get(serverUrl + '/get-mockup-by-ai-image-id/' + 1)
+            axios.get(serverUrl + '/get-mockups-by-ai-image-id/' + 1)
             .then((response) => {
                 setMockups(response.data);
             })
@@ -59,19 +59,28 @@ export default function ProductList() {
 
         try {
             const data = {
-                prompt: inputText
+                prompt: inputText,
+                credentials: 'include' // Include cookies
             }
 
             // Send POST request to start the task
             const response = await axios.post(serverUrl + '/mockup-generator/create-task', data);
             response.data.image_id 
 
-            navigate(
-            '/product-list',
-            {
-                state: { imageId: response.data.image_id  },
+            // If not authenticated redirect to login
+            if(response.status === 401){
+                navigate(
+                '/login'
+                )
             }
-            );
+            else {
+                navigate(
+                '/product-list',
+                {
+                    state: { imageId: response.data.image_id  },
+                }
+                ); 
+            }
         } 
         catch (error) {
             console.error('Error starting task:', error);
@@ -108,7 +117,7 @@ export default function ProductList() {
                 {!taskComplete && (
                     <div className="loading-animation" >
                         <div className="spinner"></div>
-                        <h3>Please wait, generating image</h3>
+                        <h3 style={{color: "white", fontWeight: "bold", fontSize:"2rem"}}>Please wait, generating image...</h3>
                     </div>
                 )}
 

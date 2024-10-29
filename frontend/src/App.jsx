@@ -4,7 +4,7 @@ import Input from './components/input'
 import Btn from './components/btn'
 import ai_robot_about from './assets/ai_robot_about.png'  
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { resolvePath, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 export default function App() {
@@ -22,19 +22,27 @@ export default function App() {
 
     try {
         const data = {
-          prompt: inputText
+          prompt: inputText,
+          credentials: 'include' // Include cookies
         }
 
         // Send POST request to start the task
         const response = await axios.post(serverUrl + '/mockup-generator/create-task', data);
-        response.data.image_id 
-
-        navigate(
-          '/product-list',
-          {
-            state: { imageId: response.data.image_id  },
-          }
-        );
+        
+        // If not authenticated redirect to login
+        if(response.status === 401){
+          navigate(
+            '/login'
+          )
+        }
+        else {
+          navigate(
+            '/product-list',
+            {
+              state: { imageId: response.data.image_id  },
+            }
+          ); 
+        }
     } 
     catch (error) {
         console.error('Error starting task:', error);
