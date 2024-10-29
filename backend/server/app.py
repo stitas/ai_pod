@@ -1,6 +1,6 @@
 import hashlib
 from flask import Flask, jsonify, request, redirect
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, jwt_required, get_jwt_identity
 import pika
 import pika.exceptions
 from models import db, bcrypt, Image, Mockup, User
@@ -52,32 +52,34 @@ def login():
 
         # If user email or password is incorrect return
         if not user or not user.check_password(data['password']):
-            return jsonify({'error': 'Invalid credentials'})
+            return jsonify({'error': 'Invalid credentials'}), 401
         
         user.last_login = datetime.datetime.utcnow()
         db.session.commit()
         
         access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=24))
+        response = jsonify({'login': 'success'})
+        set_access_cookies(response, access_token) # Put jwt token in cookies (protection from xss)
 
-        return jsonify({'access_token': access_token}), 200
+        return response, 200
 
     else:
         return jsonify({'error': 'Invalid request. Use POST request'}), 400
     
-# Redirect to googles log in screen
+# Return redirect to googles login screen url
 # After login google redirects to react frontend with authorization code in params
 @app.route('/login-google', methods=['GET'])
 def login_google():
     state = hashlib.sha256(os.urandom(1024)).hexdigest()
     nonce = hashlib.sha256(os.urandom(1024)).hexdigest() # To protect from replay attack
     authorize_url = 'https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?'
-    args = f'response_type=code&access_type=offline&client_id={str(os.environ.get('GOOGLE_CLIENT_ID'))}&redirect_uri={str(os.environ.get('FRONTEND_URL'))}&scope=openid%20email%20profile&state={state}&nonce={nonce}'
+    args = f'response_type=code&access_type=offline&client_id={str(os.environ.get('GOOGLE_CLIENT_ID'))}&redirect_uri={str(os.environ.get('FRONTEND_URL')) + '/authenticate-wait'}&scope=openid%20email%20profile&state={state}&nonce={nonce}'
 
     url = authorize_url + args
 
-    return redirect(url)
+    return jsonify({'redirect_url':url}), 200
 
-# Returns access token if google auth successful else 401 error code failed login
+# Sets access token in cookies if google auth successful else 401 error code failed login
 # Checks if google auth successful by authorization code
 @app.route('/authorize-google', methods=['POST'])
 def authorize_google():
@@ -90,7 +92,7 @@ def authorize_google():
             'code': data['authorization_code'],
             'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
             'client_secret': os.environ.get('GOOGLE_CLIENT_SECRET'),
-            'redirect_uri': os.environ.get('FRONTEND_URL'),
+            'redirect_uri': os.environ.get('FRONTEND_URL') + '/authenticate-wait',
             'grant_type': 'authorization_code',
             'access_type': 'offline'
         }
@@ -98,7 +100,8 @@ def authorize_google():
         response = requests.post(google_access_token_url, json=authorization_data).json()
 
         if 'access_token' not in response:
-            return jsonify({'error': 'Failed to exchange authorization code for access token'}), 400
+            print(response)
+            return jsonify({'error': 'Failed to exchange authorization code for access token'}), 401
         
         google_access_token = response['access_token']
 
@@ -114,23 +117,13 @@ def authorize_google():
         db.session.commit()
 
         access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=24))
+        response = jsonify({'login': 'success'})
+        set_access_cookies(response, access_token) # Put jwt token in cookies (protection from xss)
 
-        return jsonify({'access_token': access_token}), 200
+        return response, 200
 
     else:
         return jsonify({'error': 'Invalid request. Use POST request'}), 400
-
-# Get image from the database by id
-@app.route('/get-image/<image_id>', methods=['GET'])
-def get_image(image_id):
-    image = Image.query.filter_by(id=image_id).first()
-
-    if image:
-        data = image.serialize()
-        return jsonify(data), 200
-    
-    else:
-        return jsonify({'error': 'Image with such id was not found'}), 404
     
 # Get all paginated imaages
 @app.route('/get-images-paginate/', methods=['GET'])
@@ -138,6 +131,7 @@ def get_images_paginate():
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
 
+    # Get user generated images
     pagination = Image.query.paginate(page=page, per_page=per_page, error_out=False)
 
     images = [image.serialize() for image in pagination.items]
@@ -154,10 +148,36 @@ def get_images_paginate():
         }), 200
     
     else:
-        return jsonify({'error': 'Image with such id was not found'}), 404
+        return jsonify({'error': 'No images found'}), 404
+    
+@app.route('/get-user-images-paginate/')
+@jwt_required()
+def get_user_images_paginate():
+    user_id = get_jwt_identity()
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+
+    pagination = Image.query.filter_by(user_id=user_id).paginate(page=page, per_page=per_page, error_out=False) 
+
+    images = [image.serialize() for image in pagination.items]
+
+    if images:
+        return jsonify({
+            'images': images,
+            'total': pagination.total,  # Total number of items in the database
+            'page': pagination.page,  # Current page number
+            'per_page': pagination.per_page,  # Number of items per page
+            'pages': pagination.pages,  # Total number of pages
+            'has_next': pagination.has_next,  # If there's a next page
+            'has_prev': pagination.has_prev  # If there's a previous page   
+        }), 200
+    
+    else:
+        return jsonify({'error': 'No images found'}), 404
 
 # Delete image from the database by id
 @app.route('/delete-image/<image_id>', methods=['POST'])
+@jwt_required()
 def delete_image(image_id):
     if request.method == 'POST':
         image = Image.query.filter_by(id=image_id).first()
@@ -219,9 +239,9 @@ def get_mockup(mockup_id):
     else:
         return jsonify({'error': 'Mockup with such id was not found'}), 404
     
-# Get mockup from database by id
-@app.route('/get-mockup-by-ai-image-id/<ai_image_id>', methods=['GET'])
-def get_mockup_by_ai_image_id(ai_image_id):
+# Get mockups from database by id
+@app.route('/get-mockups-by-ai-image-id/<ai_image_id>', methods=['GET'])
+def get_mockups_by_ai_image_id(ai_image_id):
     mockups = Mockup.query.filter_by(ai_image_id=ai_image_id).all()
     data = []
 
@@ -249,11 +269,13 @@ def delete_mockup(mockup_id):
 
 # Creates a mockup generation task with RabbitMQ and returns the image id to which mockups will be generated
 @app.route('/mockup-generator/create-task', methods=['POST'])
+@jwt_required()
 def create_mockup_task():
     if request.method == 'POST':
+        user_id = get_jwt_identity()
         data = request.get_json(force=True)
 
-        image = Image(data['prompt'], None)
+        image = Image(data['prompt'], None, user_id)
         db.session.add(image)
         db.session.commit()
 

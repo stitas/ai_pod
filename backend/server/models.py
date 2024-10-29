@@ -46,10 +46,12 @@ class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     prompt = db.Column(db.String(500))
     url = db.Column(db.String(500), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
 
-    def __init__(self, prompt, url):
+    def __init__(self, prompt, url, user_id):
         self.prompt = prompt
         self.url = url
+        self.user_id = user_id
 
     def serialize(self):
         return {
