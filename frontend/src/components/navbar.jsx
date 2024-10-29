@@ -2,18 +2,21 @@ import logo from '../assets/logo_crop.png'
 import '../styles/navbar.css'
 import '../index.css'
 import { PersonCircle, Images, BoxArrowInRight, BoxArrowInLeft, Cart } from 'react-bootstrap-icons'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Squash as Hamburger } from 'hamburger-react'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { UserContext } from '../contexts/user_context'
 
 export default function Navbar() {
     const serverUrl = import.meta.env.VITE_SERVER_URL
 
     const [isMobileMenuOpen, setMobileMenu] = useState(false)
     const [width, setWidth] = useState(window.innerWidth);
-    const [email, setEmail] = useState('')
+
+    const { user, logout } = useContext(UserContext)
+    console.log(user)
 
     const navigate = useNavigate()
 
@@ -37,11 +40,12 @@ export default function Navbar() {
         navigate('/my-gallery')
     }
 
-    const logout = async () => {
+    const logoutUser = async () => {
         try {
             const response = await axios.post(serverUrl + '/logout', {}, {withCredentials: true})
 
             if(response.status === 200){
+                logout()
                 window.location.reload()
             }
         }
@@ -50,26 +54,7 @@ export default function Navbar() {
         }
     }
 
-    const getUserEmail = async () => {
-        try {
-            const response = await axios.get(serverUrl + '/get-user', {withCredentials: true})
-
-            if(response.status == 200){
-                setEmail(response.data.email)
-                console.log(response.data.email)
-            }
-            else {
-                setEmail('')
-            }
-        } 
-        catch (error){
-
-        }
-    }
-
     useEffect(() => {
-        getUserEmail()
-
         const handleResize = () => setWidth(window.innerWidth);
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
@@ -97,7 +82,7 @@ export default function Navbar() {
                         <Images color="white" size={25}/>
                         <a className="nav-link" onClick={goToGallery}>Gallery</a>
                     </li>
-                    { email === '' ? (
+                    { !user ? (
                         <>
                             <li className="nav-item nav-item-right">
                                 <Cart color="white" size={25}/>
@@ -120,11 +105,11 @@ export default function Navbar() {
                             </li>
                             <li className="nav-item">
                                 <PersonCircle color="white" size={25}/>
-                                <p className="nav-link">{email}</p>
+                                <p className="nav-link">{user.email}</p>
                             </li>
                             <li className="nav-item">
                                 <BoxArrowInLeft color="white" size={25}/>
-                                <a className="nav-link" onClick={logout}>Logout</a>
+                                <a className="nav-link" onClick={logoutUser}>Logout</a>
                             </li>
                         </>
                     )}
@@ -138,7 +123,7 @@ export default function Navbar() {
                                 Gallery
                             </li>
                         </a>
-                        { email === '' ? (
+                        { user.email === '' ? (
                             <a className="burger-link" onClick={goToLogin}>
                                 <li className="burger-item">
                                     Log In
@@ -153,11 +138,11 @@ export default function Navbar() {
                                 </a>
                                 <p className="burger-link">
                                     <li className="burger-item">
-                                        {email}
+                                        {user.email}
                                     </li>
                                 </p>
                                 <a className="burger-link">
-                                    <li className="burger-item" onClick={logout}>
+                                    <li className="burger-item" onClick={logoutUser}>
                                         Logout
                                     </li>
                                 </a>

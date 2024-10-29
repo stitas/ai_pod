@@ -2,10 +2,13 @@ import InputAuth from '../components/input_auth'
 import Btn from '../components/btn'
 import '../styles/login.css'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
+import { UserContext } from '../contexts/user_context'
 
 export default function Login() {
+    const { login } = useContext(UserContext)
+
     const location = useLocation();
     const navigate = useNavigate()
     const serverUrl = import.meta.env.VITE_SERVER_URL
@@ -15,7 +18,7 @@ export default function Login() {
     const[password, setPassword] = useState('')
     const[loginError, setLoginError] = useState('')
 
-    const login = async (event) => {
+    const loginUser = async (event) => {
         event.preventDefault()
 
         try {
@@ -33,6 +36,8 @@ export default function Login() {
                 setLoginError('Invalid credentials')
             }
             else {
+                const userData = await getUser()
+                login(userData)
                 navigate('/')
             }
         }
@@ -41,6 +46,7 @@ export default function Login() {
         }
     }
 
+    
     const loginGoogle = async () => {
         try {
             const response = await axios.get(serverUrl + '/login-google')
@@ -54,6 +60,19 @@ export default function Login() {
         }
     }
 
+    const getUser = async () => {
+        try {
+            const response = await axios.get(serverUrl + '/get-user', {withCredentials: true})
+
+            if(response.status == 200){
+              return response.data
+            }
+    
+        } 
+        catch (error){
+          console.log(error)
+        }
+      } 
 
     const handleInputEmail = (event) => {
         setEmail(event.target.value)
@@ -75,7 +94,7 @@ export default function Login() {
         <div className="container" style = {{height:"100vh"}}>
             <div className="login-container shadow">
                 <h1>Login</h1>
-                <form method="post" className="login-form" onSubmit={login}>
+                <form method="post" className="login-form" onSubmit={loginUser}>
                     <InputAuth placeholder={"Enter email"} type={"text"} onChange={handleInputEmail}/>
                     <InputAuth placeholder={"Enter password"} type={"password"} onChange={handleInputPassword}/>
                     <div className="login-btn">

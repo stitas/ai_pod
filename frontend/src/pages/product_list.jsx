@@ -3,13 +3,16 @@ import ProductListCard from '../components/product_list_card'
 import Navbar from '../components/navbar'
 import Input from '../components/input'
 import Btn from '../components/btn'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom';
+import { UserContext } from '../contexts/user_context'
 
 
 export default function ProductList() {
     const serverUrl = import.meta.env.VITE_SERVER_URL
+
+    const { isLoggedIn } = useContext(UserContext)
 
     const navigate = useNavigate()
     const location = useLocation();
@@ -25,7 +28,7 @@ export default function ProductList() {
         const interval = setInterval(async () => {
         try {
             // Send GET request to check task status
-            const response = await axios.get(serverUrl + '/get-image/' + 1);
+            const response = await axios.get(serverUrl + '/get-image/' + imageId);
 
             if (response.data.url != null) {
                 // Stop polling if task is complete
@@ -43,7 +46,7 @@ export default function ProductList() {
 
     const getMockups = async (imageId) => {
         if(taskComplete) {
-            axios.get(serverUrl + '/get-mockups-by-ai-image-id/' + 1)
+            axios.get(serverUrl + '/get-mockups-by-ai-image-id/' + imageId)
             .then((response) => {
                 setMockups(response.data);
             })
@@ -98,8 +101,12 @@ export default function ProductList() {
                 state: { mockup: mockup, aiImageUrl: aiImageUrl},
             }
         );
+    }
 
-
+    const goToLogin = () => {
+        navigate(
+            '/login',
+        );
     }
 
     useEffect(() => {
@@ -125,7 +132,7 @@ export default function ProductList() {
                     <div className="loaded-container">
                         <div className="input-again-container">
                             <h1>Dont like the results ? Generate again !</h1>
-                            <form action="#" onSubmit={startTask} method="POST" className="prompt-form">
+                            <form onSubmit={isLoggedIn ? startTask : goToLogin} method="POST" className="prompt-form">
                                 <Input placeholder={"Enter a prompt for the AI"} onChange={handleInputChange}/>
                                 <div className="btn-index">
                                     <Btn value="GENERATE"/>

@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 import '../styles/product_info.css'
 import Navbar from '../components/navbar';
 import Btn from '../components/btn';
+import { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../contexts/user_context';
 
 export default function ProductInfo(){
     const location = useLocation();
@@ -11,6 +13,17 @@ export default function ProductInfo(){
     const aiImageUrl = location.state?.aiImageUrl
 
     const sizes = ['S', 'M', 'L', 'XL']
+
+    const { isLoggedIn } = useContext(UserContext)
+
+    const addToCart = () => {
+        if(isLoggedIn){
+
+        }
+        else {
+            
+        }
+    }
 
     return (
         <>  
@@ -59,7 +72,7 @@ export default function ProductInfo(){
                             </div>
                         </div>
                         <div className="add-to-cart-btn-container">
-                            <Btn value={"ADD TO CART"}/>
+                            <Btn value={"ADD TO CART"} onClick={addToCart}/>
                         </div>
                     </div>
                 </div>

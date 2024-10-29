@@ -1,12 +1,15 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import axios from 'axios'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { UserContext } from '../contexts/user_context'
 
 export default function AuthenticateWait() {
+    const { login } = useContext(UserContext)
     const location = useLocation()
     const navigate = useNavigate()
     const queryParams = new URLSearchParams(location.search)
     const serverUrl = import.meta.env.VITE_SERVER_URL
+    const[user, setUser] = useState({})
 
     const authCode = queryParams.get('code')
     const error = queryParams.get('error')
@@ -33,6 +36,8 @@ export default function AuthenticateWait() {
             console.log(error)
 
             if(response.status === 200){
+                const userData = await getUser()
+                login(userData)
                 navigate('/')
             }
             else {
@@ -47,6 +52,21 @@ export default function AuthenticateWait() {
             console.log(error)
         }
     }
+
+    const getUser = async () => {
+        try {
+            const response = await axios.get(serverUrl + '/get-user', {withCredentials: true})
+    
+            if(response.status == 200){
+              return response.data
+            }
+    
+        } 
+        catch (error){
+          console.log(error)
+        }
+    } 
+
 
     useEffect(() => {
         authenticateGoogle();
