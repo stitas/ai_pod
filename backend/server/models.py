@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timezone
 from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
@@ -13,10 +13,10 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), nullable=True)
     password = db.Column(db.String, nullable=True)
-    oauth_provider = db.Column(db.String(100), nullable=True) # Facebook or Google
+    oauth_provider = db.Column(db.String(100), nullable=True) # Google
     oauth_provider_id = db.Column(db.String, nullable=True)   
-    created = db.Column(db.DateTime, default=datetime.utcnow)
-    last_login = db.Column(db.DateTime, default=datetime.utcnow)
+    created = db.Column(db.String, default=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S:%f'))
+    last_login = db.Column(db.String, default=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S:%f'))
 
     def __init__(self, email, oauth_provider, oauth_provider_id):
         self.email = email
@@ -28,6 +28,16 @@ class User(db.Model):
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
+    
+    def serialize(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'oauth_provider': self.oauth_provider,
+            'oauth_provider_id': self.oauth_provider_id,
+            'created': self.created,
+            'last_login': self.last_login
+        }
 
 
 class Order(db.Model):
@@ -35,7 +45,7 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
     price = db.Column(db.Double)
-    created = db.Column(db.DateTime, default=datetime.utcnow)
+    created = db.Column(db.String,  default=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S:%f'))
 
     def __init__(self, user_id, price):
         self.user_id = user_id

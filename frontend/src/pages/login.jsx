@@ -11,8 +11,6 @@ export default function Login() {
     const serverUrl = import.meta.env.VITE_SERVER_URL
     const googleError = location.state?.googleError; // Accessing data from the location state
 
-    console.log(googleError)
-
     const[email, setEmail] = useState('')
     const[password, setPassword] = useState('')
     const[loginError, setLoginError] = useState('')
@@ -26,7 +24,9 @@ export default function Login() {
                 password: password
             }
     
-            const response = await axios.post(serverUrl + '/login', data)
+            const response = await axios.post(serverUrl + '/login', data, {withCredentials: true})
+
+            console.log(document.cookie)
     
             // check invalid credentials
             if(response.status === 401){

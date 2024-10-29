@@ -15,7 +15,7 @@ export default function ProductInfo(){
     return (
         <>  
             <div className="container">
-                <Navbar name=''/>
+                <Navbar/>
                 <div className="product-info-container">
                     <div className="carousel-container">
                         <Carousel>

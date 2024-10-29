@@ -1,12 +1,12 @@
 import InfiniteImageGallery from "../components/infinite_gallery"
 import Navbar from "../components/navbar"
 
-export default function Gallery() {
+export default function MyGallery() {
     return (
         <>
-            <div className="container" >
+            <div className="container">
                 <Navbar/>
-                <InfiniteImageGallery url={"/get-images-paginate"}/>
+                <InfiniteImageGallery url={"/get-user-images-paginate"}/>
             </div>
         </>
     )

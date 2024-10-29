@@ -3,12 +3,13 @@ import Navbar from './components/navbar'
 import Input from './components/input'
 import Btn from './components/btn'
 import ai_robot_about from './assets/ai_robot_about.png'  
-import { useState } from 'react'
-import { resolvePath, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 export default function App() {
   const [inputText, setInputText] = useState('')
+  const [authenticated, setAuthenticated] = useState(false)
   const navigate = useNavigate()
   const serverUrl = import.meta.env.VITE_SERVER_URL
 
@@ -16,8 +17,29 @@ export default function App() {
     navigate('/register')
   }
 
+  const goToLogin = () => {
+    navigate('/login')
+  }
+
+  const getUser = async () => {
+    try {
+        const response = await axios.get(serverUrl + '/get-user', {withCredentials: true})
+
+        if(response.status == 200){
+          setAuthenticated(true)
+        }
+        else {
+          setAuthenticated(false)
+        }
+
+    } 
+    catch (error){
+      console.log(error)
+    }
+}
+
   // Function to start the task
-  const startTask = async () => {
+  const startTask = async (event) => {
     event.preventDefault()
 
     try {
@@ -53,16 +75,20 @@ export default function App() {
     setInputText(event.target.value);
   };
 
+  useEffect(() => {
+    getUser()
+  }, [])
+
 
   return (
     <>
       <div className="container">
         <div className="main-container">
-          <Navbar name="titas" />
+          <Navbar/>
           <div className="index-container">
             <h1 id="index-title">Let your imagination flow...</h1>
             <h3 id="title-lower">Just relax. The AI will do all the work for you.</h3>
-            <form action="#" onSubmit={startTask} method="POST" className="prompt-form">
+            <form action="#" onSubmit={authenticated ? startTask : goToLogin} method="POST" className="prompt-form">
               <Input placeholder={"Enter a prompt for the AI"} onChange={handleInputChange}/>
               <div className="btn-index">
                 <Btn value="GENERATE"/>

@@ -1,13 +1,13 @@
 import hashlib
-from flask import Flask, jsonify, request, redirect
-from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, jwt_required, get_jwt_identity
+from flask import Flask, jsonify, request
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import pika
 import pika.exceptions
 from models import db, bcrypt, Image, Mockup, User
 import json
 import os
 from dotenv import load_dotenv
-import datetime
+from datetime import datetime, timezone, timedelta
 import requests
 from flask_cors import CORS
 
@@ -17,12 +17,13 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 
 db.init_app(app)
 bcrypt.init_app(app)
 jwt = JWTManager(app)
 
-CORS(app, origins=[os.environ.get('FRONTEND_URL')])
+CORS(app, supports_credentials=True ,origins=[os.environ.get('FRONTEND_URL')])
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -54,12 +55,18 @@ def login():
         if not user or not user.check_password(data['password']):
             return jsonify({'error': 'Invalid credentials'}), 401
         
-        user.last_login = datetime.datetime.utcnow()
+        user.last_login = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S:%f')
         db.session.commit()
         
-        access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=24))
+        access_token = create_access_token(identity=user.id, expires_delta=timedelta(hours=24))
         response = jsonify({'login': 'success'})
-        set_access_cookies(response, access_token) # Put jwt token in cookies (protection from xss)
+        response.set_cookie(
+            'access_token_cookie',
+            access_token,
+            httponly=True,       
+            secure=True,          
+            samesite='None'        # Allows cross-origin requests
+        )
 
         return response, 200
 
@@ -113,20 +120,66 @@ def authorize_google():
             user = User(user_info['email'], oauth_provider='google', oauth_provider_id=user_info['sub'])
             db.session.add(user)
 
-        user.last_login = datetime.datetime.utcnow()
+        user.last_login = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S:%f')
         db.session.commit()
 
-        access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(hours=24))
+        access_token = create_access_token(identity=user.id, expires_delta=timedelta(hours=24))
         response = jsonify({'login': 'success'})
-        set_access_cookies(response, access_token) # Put jwt token in cookies (protection from xss)
+        response.set_cookie(
+            'access_token_cookie',
+            access_token,
+            httponly=True,       
+            secure=True,          
+            samesite='None'        # Allows cross-origin requests
+        )
 
         return response, 200
 
     else:
         return jsonify({'error': 'Invalid request. Use POST request'}), 400
     
+@app.route('/logout', methods=['POST'])
+def logout():
+    response = jsonify({'message': 'Logged out successfully'})
+    response.set_cookie(
+            'access_token_cookie', 
+            '',
+            expires=0, 
+            httponly=True,       
+            secure=True,          
+            samesite='None'
+    )
+    return response, 200
+
+@app.route('/get-user', methods=['GET'])
+@jwt_required()
+def get_user():
+    user_id = get_jwt_identity()
+
+    user = User.query.filter_by(id=user_id).first()
+
+    if user:
+        print(user.serialize())
+        data = user.serialize()
+        return jsonify(data), 200
+
+    else:
+        return jsonify({'error': 'User not found'}), 404
+
+# Get image from the database by id
+@app.route('/get-image/<image_id>', methods=['GET'])
+def get_image(image_id):
+    image = Image.query.filter_by(id=image_id).first()
+
+    if image:
+        data = image.serialize()
+        return jsonify(data), 200
+    
+    else:
+        return jsonify({'error': 'Image with such id was not found'}), 404
+
 # Get all paginated imaages
-@app.route('/get-images-paginate/', methods=['GET'])
+@app.route('/get-images-paginate', methods=['GET'])
 def get_images_paginate():
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
@@ -150,7 +203,7 @@ def get_images_paginate():
     else:
         return jsonify({'error': 'No images found'}), 404
     
-@app.route('/get-user-images-paginate/')
+@app.route('/get-user-images-paginate')
 @jwt_required()
 def get_user_images_paginate():
     user_id = get_jwt_identity()

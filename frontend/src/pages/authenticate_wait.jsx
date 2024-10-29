@@ -25,7 +25,7 @@ export default function AuthenticateWait() {
                 )
             }
 
-            const response = await axios.post(serverUrl + '/authorize-google', data)
+            const response = await axios.post(serverUrl + '/authorize-google', data, {withCredentials: true})
 
             console.log(window.location.href)
             console.log(authCode)

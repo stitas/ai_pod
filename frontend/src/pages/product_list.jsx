@@ -54,7 +54,7 @@ export default function ProductList() {
     }
 
     // Function to start the task
-    const startTask = async () => {
+    const startTask = async (event) => {
         event.preventDefault()
 
         try {
@@ -113,7 +113,7 @@ export default function ProductList() {
     return (
         <>
             <div className="container" style = {{height: taskComplete ? "100%" : "100vh", justifyContent: taskComplete ? "center" : "unset"}}>
-                <Navbar name=""/>
+                <Navbar/>
                 {!taskComplete && (
                     <div className="loading-animation" >
                         <div className="spinner"></div>
