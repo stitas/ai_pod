@@ -38,7 +38,21 @@ class User(db.Model):
             'created': self.created,
             'last_login': self.last_login
         }
+    
+class CartItem(db.Model):
+    __tablename__ = 'CartItem'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+    mockup_id = db.Column(db.Integer, db.ForeignKey('Mockup.id'))
+    quantity = db.Column(db.Integer)
+    size = db.Column(db.Integer, nullable=True)
 
+    def __init__(self, user_id, mockup_id, quantity, size):
+        self.user_id = user_id
+        self.mockup_id = mockup_id
+        self.quantity = quantity
+        self.size = size
+    
 
 class Order(db.Model):
     __tablename__ = 'Order'
@@ -65,6 +79,7 @@ class Image(db.Model):
 
     def serialize(self):
         return {
+            'id': self.id,
             'prompt': self.prompt,
             'url': self.url   
         }
@@ -90,6 +105,7 @@ class Mockup(db.Model):
 
     def serialize(self):
         return {
+            'id': self.id,
             'title': self.title,
             'price': self.price,
             'color': self.color,

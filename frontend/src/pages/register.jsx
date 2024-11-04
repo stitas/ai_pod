@@ -84,7 +84,7 @@ export default function Register() {
     }, [password2])
 
     return (
-        <div className="container" style = {{height:"100vh"}}>
+        <div className="container gradient" style = {{height:"100vh"}}>
             <div className="login-container shadow">
                 <h1>Sign up</h1>
                 <form method="post" className="login-form" onSubmit={register}>

@@ -53,7 +53,9 @@ function InfiniteImageGallery({url}) {
     navigate(
       '/product-list',
       {
-        state: { imageId: imageId  },
+        state: { 
+          imageId: imageId,
+        },
       }
     )
   }

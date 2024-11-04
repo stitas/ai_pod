@@ -14,7 +14,7 @@ IMGBB_PARAMS = {
 }
 
 def upload_img_url(img_url):
-    img_base64 = base64.b64encode(requests.get(img_url)).content
+    img_base64 = base64.b64encode(requests.get(img_url).content)
 
     files = {
         'image': (None, img_base64)

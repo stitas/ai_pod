@@ -54,10 +54,9 @@ def generate_image(prompt):
         response = requests.get(data['urls']['get'], headers=headers)
         data = json.loads(response.text)
 
-    base64_string = data['output'][0]
-    base64_string = base64_string.split(',', 1)[1] # Cut everything up to the first comma where the base64 string of image starts
+    ai_url = data['output'][0]
 
-    url = upload_img_base64(base64_string)
+    url = upload_img_url(ai_url)
 
     return url
 

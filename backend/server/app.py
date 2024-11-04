@@ -1,15 +1,16 @@
 import hashlib
 from flask import Flask, jsonify, request
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies
 import pika
 import pika.exceptions
-from models import db, bcrypt, Image, Mockup, User
+from models import db, bcrypt, Image, Mockup, User, CartItem
 import json
 import os
 from dotenv import load_dotenv
 from datetime import datetime, timezone, timedelta
 import requests
 from flask_cors import CORS
+import secrets
 
 load_dotenv()
 
@@ -18,12 +19,13 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 
 db.init_app(app)
 bcrypt.init_app(app)
 jwt = JWTManager(app)
 
-CORS(app, supports_credentials=True ,origins=[os.environ.get('FRONTEND_URL')])
+CORS(app, supports_credentials=True, origins=[os.environ.get('FRONTEND_URL')])
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -59,10 +61,21 @@ def login():
         db.session.commit()
         
         access_token = create_access_token(identity=user.id, expires_delta=timedelta(hours=24))
+        csrf_token = secrets.token_hex(16)
+
         response = jsonify({'login': 'success'})
+
         response.set_cookie(
             'access_token_cookie',
             access_token,
+            httponly=True,       
+            secure=True,          
+            samesite='None'        # Allows cross-origin requests
+        )
+
+        response.set_cookie(
+            'csrf_access_token',
+            csrf_token,
             httponly=True,       
             secure=True,          
             samesite='None'        # Allows cross-origin requests
@@ -360,6 +373,91 @@ def create_mockup_task():
     
     else:
         return jsonify({'error': 'Invalid request. Use POST request'}), 400
+    
+@app.route('/get-user-cart', methods=['GET'])
+@jwt_required()
+def get_user_cart():
+    user_id = get_jwt_identity()
+    
+    cart_items = CartItem.query.filter_by(user_id=user_id).all()
+    mockups = []
+
+    # from each cart item gets the mockup and puts it in a mockup list which later returned
+    if cart_items:
+        for item in cart_items:
+            mockup = Mockup.query.filter_by(id=item.mockup_id).first()
+            mockup = mockup.serialize()
+            mockup['quantity'] = item.quantity
+            mockup['size'] = item.size
+            mockups.append(mockup)
+
+        return jsonify(mockups), 200
+    else:
+        return jsonify([]), 200
+    
+@app.route('/create-cart-item', methods=['POST'])
+@jwt_required()
+def create_cart_item():
+    if request.method == 'POST':
+        user_id = get_jwt_identity()
+        data = request.get_json(force=True)
+        
+        cart_item = CartItem(user_id, data['mockup_id'], 1, data['size'])
+        db.session.add(cart_item)
+        db.session.commit()
+
+        return 'Item created successfully', 201
+        
+    else:
+        return jsonify({'error': 'Invalid request. Use POST request'}), 400
+    
+@app.route('/update-cart-item', methods=['POST'])
+@jwt_required()
+def update_cart_item():
+    if request.method == 'POST':
+        user_id = get_jwt_identity()
+        data = request.get_json(force=True)
+        
+        cart_item = CartItem.query.filter_by(user_id=user_id, mockup_id=data['mockup_id'], size=data['size']).first()
+        cart_item.quantity = data['quantity']
+
+        db.session.commit()
+
+        return 'Cart item updated successfully', 200
+        
+    else:
+        return jsonify({'error': 'Invalid request. Use POST request'}), 400
+    
+@app.route('/delete-cart-item', methods=['POST'])
+@jwt_required()
+def delete_cart_item():
+    if request.method == 'POST':
+        user_id = get_jwt_identity()
+        data = request.get_json(force=True)
+        
+        cart_item = CartItem.query.filter_by(user_id=user_id, mockup_id=data['mockup_id']).first()
+        
+        db.session.delete(cart_item)
+        db.session.commit()
+
+        return 'Cart item deleted successfully', 200
+        
+    else:
+        return jsonify({'error': 'Invalid request. Use POST request'}), 400
+    
+@app.route('/check-cart-item-exists/', methods=['POST'])
+@jwt_required()
+def check_cart_item_exists():
+    user_id = get_jwt_identity()
+    data = request.get_json(force=True)
+    
+    cart_item = CartItem.query.filter_by(user_id=user_id, mockup_id=data['mockup_id'], size=data['size']).first()
+    
+    if cart_item:
+        return jsonify({'quantity': cart_item.quantity}), 200
+    
+    return jsonify(False), 404
+    
     
 if __name__ == '__main__':
     with app.app_context():

@@ -9,24 +9,27 @@ import ProductInfo from './pages/product_info.jsx'
 import Gallery from './pages/gallery.jsx'
 import AuthenticateWait from './pages/authenticate_wait.jsx'
 import MyGallery from './pages/mygallery.jsx'
+import Cart from './pages/cart.jsx'
 import './index.css'
 import { UserProvider } from './contexts/user_context.jsx'
+import { CartProvider } from './contexts/cart_context.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
     <UserProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/' element={<App/>}/>
-          <Route path='/login' element={<Login/>}/>
-          <Route path='/register' element={<Register/>}/>
-          <Route path='/product-list' element={<ProductList/>}/>
-          <Route path='/product-info' element={<ProductInfo/>}/>
-          <Route path='/gallery' element={<Gallery/>}/>
-          <Route path='/my-gallery' element={<MyGallery/>}/>
-          <Route path='/authenticate-wait' element={<AuthenticateWait/>}/>
-        </Routes>
-      </BrowserRouter>,
+      <CartProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<App/>}/>
+            <Route path='/login' element={<Login/>}/>
+            <Route path='/register' element={<Register/>}/>
+            <Route path='/product-list' element={<ProductList/>}/>
+            <Route path='/product-info' element={<ProductInfo/>}/>
+            <Route path='/gallery' element={<Gallery/>}/>
+            <Route path='/my-gallery' element={<MyGallery/>}/>
+            <Route path='/authenticate-wait' element={<AuthenticateWait/>}/>
+            <Route path='/cart' element={<Cart/>}/>
+          </Routes>
+        </BrowserRouter>
+      </CartProvider>
     </UserProvider>
-  </StrictMode>
 )

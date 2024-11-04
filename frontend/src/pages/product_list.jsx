@@ -63,11 +63,10 @@ export default function ProductList() {
         try {
             const data = {
                 prompt: inputText,
-                credentials: 'include' // Include cookies
             }
 
             // Send POST request to start the task
-            const response = await axios.post(serverUrl + '/mockup-generator/create-task', data);
+            const response = await axios.post(serverUrl + '/mockup-generator/create-task', data, {withCredentials: true});
             response.data.image_id 
 
             // If not authenticated redirect to login
@@ -143,7 +142,7 @@ export default function ProductList() {
                         <h1 id="product-list-title">Generated products</h1>
                         <div className="product-list-container">
                             {mockups.map((mockup, index) => (
-                                <div className="product-list-item" onClick={() => {goToProductInfo(mockup)}}>
+                                <div key={index} className="product-list-item" onClick={() => {goToProductInfo(mockup)}}>
                                     <ProductListCard imageUrl={mockup.mockup_image_url} productPrice={mockup.price} productTitle={mockup.title}/>
                                 </div>
                             ))}

@@ -4,12 +4,13 @@ import Input from './components/input'
 import Btn from './components/btn'
 import ai_robot_about from './assets/ai_robot_about.png'  
 import { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios'
 import { UserContext } from './contexts/user_context'
 
 export default function App() {
   const navigate = useNavigate()
+
   const serverUrl = import.meta.env.VITE_SERVER_URL
 
   const { isLoggedIn } = useContext(UserContext)
@@ -31,17 +32,17 @@ export default function App() {
     try {
         const data = {
           prompt: inputText,
-          credentials: 'include' // Include cookies
         }
 
         // Send POST request to start the task
-        const response = await axios.post(serverUrl + '/mockup-generator/create-task', data);
-        
-        // If not authenticated redirect to login
-        if(response.status === 401){
-          navigate(
-            '/login'
-          )
+        const response = await axios.post(
+          serverUrl + '/mockup-generator/create-task', data, {withCredentials: true}
+        );
+
+        console.log(response.data)
+
+        if(response.status == 401){
+          navigate('/login')
         }
         else {
           navigate(
@@ -53,6 +54,7 @@ export default function App() {
         }
     } 
     catch (error) {
+        // If not authenticated redirect to login
         console.error('Error starting task:', error);
     }
   };
@@ -63,7 +65,7 @@ export default function App() {
 
   return (
     <>
-      <div className="container">
+      <div className="container gradient">
         <div className="main-container">
           <Navbar/>
           <div className="index-container">

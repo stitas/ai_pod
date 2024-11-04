@@ -29,7 +29,7 @@ export default function Login() {
     
             const response = await axios.post(serverUrl + '/login', data, {withCredentials: true})
 
-            console.log(document.cookie)
+            console.log(response.headers)
     
             // check invalid credentials
             if(response.status === 401){
@@ -91,7 +91,7 @@ export default function Login() {
     }, [])
 
     return (
-        <div className="container" style = {{height:"100vh"}}>
+        <div className="container gradient" style = {{height:"100vh"}}>
             <div className="login-container shadow">
                 <h1>Login</h1>
                 <form method="post" className="login-form" onSubmit={loginUser}>
