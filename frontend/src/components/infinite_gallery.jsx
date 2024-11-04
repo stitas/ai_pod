@@ -20,13 +20,9 @@ function InfiniteImageGallery({url}) {
     try {
       const response = await axios.get(serverUrl + url, {
           params: { page, per_page: 20 }, // Use page and items per page
+          withCredentials: true
         },
       );
-
-      // If not authorized
-      if(response.status === 401){
-        navigate('/login')
-      }
 
       setImages(prevImages => [...prevImages, ...response.data.images]);
       setHasMore(response.data.has_next); // Use `has_next` to determine if more pages are available
