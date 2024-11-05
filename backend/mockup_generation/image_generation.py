@@ -2,7 +2,7 @@ import requests
 from dotenv import load_dotenv
 import os
 import json
-from .img_to_url import upload_img_base64, upload_img_url
+from .img_to_url import  upload_img_url
 
 load_dotenv()
 

@@ -26,14 +26,14 @@ def upload_img_url(img_url):
 
     return img_url
 
-def upload_img_base64(img_base64):
-    files = {
-        'image': (None, img_base64)
-    }
+# def upload_img_base64(img_base64):
+#     files = {
+#         'image': (None, img_base64)
+#     }
 
-    response = requests.post(URL, params=IMGBB_PARAMS, files=files)
-    response = json.loads(response.text)
+#     response = requests.post(URL, params=IMGBB_PARAMS, files=files)
+#     response = json.loads(response.text)
 
-    img_url = response['data']['url']
+#     img_url = response['data']['url']
 
-    return img_url
+#     return img_url
