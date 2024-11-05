@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies
 import pika
 import pika.exceptions
-from models import db, bcrypt, Image, Mockup, User, CartItem
+from models import db, bcrypt, Image, Mockup, User, CartItem, Order
 import json
 import os
 from dotenv import load_dotenv
@@ -216,7 +216,7 @@ def get_images_paginate():
     else:
         return jsonify({'error': 'No images found'}), 404
     
-@app.route('/get-user-images-paginate')
+@app.route('/get-user-images-paginate', methods=['GET'])
 @jwt_required()
 def get_user_images_paginate():
     user_id = get_jwt_identity()
@@ -445,18 +445,75 @@ def delete_cart_item():
     else:
         return jsonify({'error': 'Invalid request. Use POST request'}), 400
     
+@app.route('/clear-cart', methods=['POST'])
+@jwt_required()
+def clear_cart():
+    if request.method == 'POST':
+        user_id = get_jwt_identity()
+        
+        CartItem.query.filter_by(user_id=user_id).delete()
+        db.session.commit()
+
+        return 'Cart cleared successfully', 200
+        
+    else:
+        return jsonify({'error': 'Invalid request. Use POST request'}), 400
+    
 @app.route('/check-cart-item-exists/', methods=['POST'])
 @jwt_required()
 def check_cart_item_exists():
-    user_id = get_jwt_identity()
-    data = request.get_json(force=True)
+    if request.method == 'POST':
+        user_id = get_jwt_identity()
+        data = request.get_json(force=True)
+        
+        cart_item = CartItem.query.filter_by(user_id=user_id, mockup_id=data['mockup_id'], size=data['size']).first()
+        
+        if cart_item:
+            return jsonify({'quantity': cart_item.quantity}), 200
     
-    cart_item = CartItem.query.filter_by(user_id=user_id, mockup_id=data['mockup_id'], size=data['size']).first()
+        return jsonify(False), 404
     
-    if cart_item:
-        return jsonify({'quantity': cart_item.quantity}), 200
-    
-    return jsonify(False), 404
+    else:
+        return jsonify({'error': 'Invalid request. Use POST request'}), 400
+
+@app.route('/create-order', methods=['POST'])
+def create_order():
+    if request.method == 'POST':
+        data = request.get_json(force=True)
+
+        if data:
+            order = Order(data['user_id'], data['order_price'])
+            db.session.add(order)
+            db.session.commit()
+
+            body = {
+                'order_id': order.id,
+                'cart': data['cart']
+            }
+
+            try:
+                connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672))
+            except pika.exceptions.AMQPConnectionError:
+                return jsonify({'error': 'Failed to connect to RabbitMQ service. Message wont be sent.'}), 500
+            
+            channel = connection.channel()
+            channel.queue_declare('product_printful_generation_queue', durable=True)
+
+            channel.basic_publish(
+                exchange = '',
+                routing_key = 'product_printful_generation_queue',
+                properties = pika.BasicProperties(
+                    delivery_mode = pika.DeliveryMode.Persistent
+                ),
+                body=json.dumps(body)
+            )
+
+            connection.close()
+            return jsonify({'order_id': order.id}), 200
+
+    else:
+        return jsonify({'error': 'Invalid request. Use POST request'}), 400
+
     
     
 if __name__ == '__main__':

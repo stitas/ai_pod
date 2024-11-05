@@ -5,11 +5,17 @@ import '../styles/cart.css'
 import Navbar from '../components/navbar';
 import Btn from '../components/btn';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Cart() {
     const { isLoggedIn } = useContext(UserContext)
     const { cart, addToCart, removeFromCart, removeFromCartCompletely, setAllCart } = useContext(CartContext)
     const serverUrl = import.meta.env.VITE_SERVER_URL
+    const navigate = useNavigate()
+
+    const goToPay = () => {
+        navigate('/pay')
+    }
 
     const onQuantityChange = async (item, operation) => {
         operation == 1 ? addToCart(item) : removeFromCart(item)
@@ -91,7 +97,7 @@ export default function Cart() {
                             </div>
                         ))}
                         <div className="checkout-btn-container">
-                            <Btn value="CHECKOUT"/>
+                            <Btn value="CHECKOUT" onClick={goToPay}/>
                         </div>
                     </div>
                 ): (

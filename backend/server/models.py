@@ -57,7 +57,7 @@ class CartItem(db.Model):
 class Order(db.Model):
     __tablename__ = 'Order'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('User.id'), nullable=True)
     price = db.Column(db.Double)
     created = db.Column(db.String,  default=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S:%f'))
 

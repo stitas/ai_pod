@@ -1,0 +1,29 @@
+{
+    "items": [
+        {
+            "name": "Maikė",
+            "quantity": 1,
+            "retail_price": 19.99,
+            "source": "sync",
+            "sync_variant_id": 365814116
+        },
+        {
+            "name": "Maišas",
+            "quantity": 1,
+            "retail_price": 24.99,
+            "source": "sync",
+            "sync_variant_id": 365814119
+        }
+    ],
+    "recipient": {
+        "address1": "a",
+        "address2": "a",
+        "city": "Miestas",
+        "country": "Lithuania",
+        "country_code": "LT",
+        "email": "monstras@gmail.com",
+        "name": "Monstras monstrelis",
+        "phone": "866666666",
+        "zip": "69420"
+    }
+}

@@ -3,8 +3,8 @@ import Navbar from './components/navbar'
 import Input from './components/input'
 import Btn from './components/btn'
 import ai_robot_about from './assets/ai_robot_about.png'  
-import { useContext, useEffect, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { UserContext } from './contexts/user_context'
 

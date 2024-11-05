@@ -7,10 +7,6 @@ import os
 from  mockup_generation import image_generation
 from  mockup_generation import mockup_generator
 
-# TODO
-# finish mockupgeneration task
-# add multiprocessing
-
 load_dotenv()
 SERVER_URL = os.environ.get('FLASK_SERVER_URL')
 
@@ -51,7 +47,6 @@ def start_consuming():
     channel.basic_qos(prefetch_count=1)
     channel.basic_consume(queue='mockup_generation_queue', on_message_callback=callback)
     channel.start_consuming()
-    print('start consuming')
 
 if __name__ == '__main__':
     start_consuming()

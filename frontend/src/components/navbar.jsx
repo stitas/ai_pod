@@ -123,12 +123,19 @@ export default function Navbar() {
                                 Gallery
                             </li>
                         </a>
-                        { user.email === '' ? (
-                            <a className="burger-link" onClick={goToLogin}>
-                                <li className="burger-item">
-                                    Log In
-                                </li>
-                            </a>
+                        { !user ? (
+                            <>
+                                <a className="burger-link">
+                                    <li className="burger-item" onClick={goToCart}>
+                                        Cart
+                                    </li>
+                                </a>
+                                <a className="burger-link" onClick={goToLogin}>
+                                    <li className="burger-item">
+                                        Log In
+                                    </li>
+                                </a>
+                            </>
                         ) : (
                             <>
                                 <a className="burger-link" onClick={goToMyGallery}>
@@ -136,11 +143,11 @@ export default function Navbar() {
                                         My Gallery
                                     </li>
                                 </a>
-                                <p className="burger-link">
-                                    <li className="burger-item">
-                                        {user.email}
+                                <a className="burger-link">
+                                    <li className="burger-item" onClick={goToCart}>
+                                        Cart
                                     </li>
-                                </p>
+                                </a>
                                 <a className="burger-link">
                                     <li className="burger-item" onClick={logoutUser}>
                                         Logout
