@@ -13,7 +13,7 @@ export default function Register() {
     const[password1, setPassword1] = useState('')
     const[password2, setPassword2] = useState('')
     const[registerError, setRegisterError] = useState('')
-    const[passwordMatch, setPasswordMatch] = useState(false)
+    const[formValid, setFormValid] = useState(false)
 
     const register = async (event) => {
         event.preventDefault()
@@ -67,21 +67,34 @@ export default function Register() {
         navigate('/login')
     }
 
-    useEffect(() => {
-        if(password1 !== password2 && password2 !== ''){
-            setRegisterError('Passwords do not match')
-            setPasswordMatch(false)
-        }
-        else {
-            setRegisterError('')
-            setPasswordMatch(false)
-        }
+    const isValidEmail = (email) => {
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailRegex.test(email);
+    }
 
-        if(password1 === password2){
-            setPasswordMatch(true)
-            setRegisterError('')
+    useEffect(() => {
+        if (email.length > 0 && !isValidEmail(email)){
+            setRegisterError('Enter a valid email')
+            setFormValid(false)
         }
-    }, [password2])
+        else if (password1 !== password2 && password2 !== '') {
+            setRegisterError('Passwords do not match')
+            setFormValid(false)
+        } else if (password1.length > 0 && password1.length < 8) {
+            setRegisterError('Password should be at least 8 characters long')
+            setFormValid(false)
+        } else if (password1.length > 0 && password1 === password1.toLowerCase()) {
+            setRegisterError('Password should have at least one uppercase character')
+            setFormValid(false)
+        } else if (password1.length > 0 && !/\d/.test(password1)) {
+            setRegisterError('Password should contain at least one number')
+            setFormValid(false)
+        } else {
+            // All conditions met
+            setRegisterError('')
+            setFormValid(true)
+        }
+    }, [email, password1, password2])
 
     return (
         <div className="container gradient" style = {{height:"100vh"}}>
@@ -92,7 +105,7 @@ export default function Register() {
                     <InputAuth placeholder={"Enter password"} type={"password"} onChange={handleInputPassword1}/>
                     <InputAuth placeholder={"Repeat password"} type={"password"} onChange={handleInputPassword2}/>
                     <div className="login-btn">
-                        <Btn value={"Sign Up"} disabled={!passwordMatch}/>
+                        <Btn value={"Sign Up"} disabled={!formValid}/>
                     </div>
                 </form>
                 <hr />  
