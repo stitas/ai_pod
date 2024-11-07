@@ -1,0 +1,47 @@
+services:
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: DockerFile
+    ports:
+      - "3000:80" # Map Nginx to port 3000
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://127.0.0.1:5000 # Flask server URL in container network
+
+  # Flask Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: DockerFile
+    env_file:
+      - .env
+    ports:
+      - "5000:5000" # Map Flask server to port 5000
+    depends_on:
+      - rabbitmq
+    environment:
+      - FLASK_ENV=development
+      - RABBITMQ_HOST=rabbitmq
+
+  # RabbitMQ Service
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"     # RabbitMQ server
+      - "15672:15672"   # RabbitMQ management UI
+
+  # Worker Service
+  worker-services:
+    build:
+      context: ./worker_services
+      dockerfile: DockerFile
+    env_file:
+      - .env
+    command: ["sh", "/worker_services/start_workers.sh"]  # Run the shell script to start both workers
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq

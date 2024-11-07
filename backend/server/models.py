@@ -11,10 +11,10 @@ bcrypt = Bcrypt()
 class User(db.Model):
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100), nullable=True)
+    email = db.Column(db.String(100), nullable=True, unique=True)
     password = db.Column(db.String, nullable=True)
     oauth_provider = db.Column(db.String(100), nullable=True) # Google
-    oauth_provider_id = db.Column(db.String, nullable=True)   
+    oauth_provider_id = db.Column(db.String, nullable=True, unique=True)   
     created = db.Column(db.String, default=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S:%f'))
     last_login = db.Column(db.String, default=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S:%f'))
 

@@ -20,6 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI'
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False
+RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST')
 
 db.init_app(app)
 bcrypt.init_app(app)
@@ -93,7 +94,7 @@ def login_google():
     state = hashlib.sha256(os.urandom(1024)).hexdigest()
     nonce = hashlib.sha256(os.urandom(1024)).hexdigest() # To protect from replay attack
     authorize_url = 'https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?'
-    args = f'response_type=code&access_type=offline&client_id={str(os.environ.get('GOOGLE_CLIENT_ID'))}&redirect_uri={str(os.environ.get('FRONTEND_URL')) + '/authenticate-wait'}&scope=openid%20email%20profile&state={state}&nonce={nonce}'
+    args = f'response_type=code&access_type=offline&client_id={str(os.environ.get("GOOGLE_CLIENT_ID"))}&redirect_uri={str(os.environ.get("FRONTEND_URL")) + "/authenticate-wait"}&scope=openid%20email%20profile&state={state}&nonce={nonce}'
 
     url = authorize_url + args
 
@@ -351,7 +352,7 @@ def create_mockup_task():
         }
 
         try:
-            connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672))
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST, port=5672))
         except pika.exceptions.AMQPConnectionError:
             return jsonify({'error': 'Failed to connect to RabbitMQ service. Message wont be sent.'}), 500
         
@@ -492,7 +493,7 @@ def create_order():
             }
 
             try:
-                connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672))
+                connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST, port=5672))
             except pika.exceptions.AMQPConnectionError:
                 return jsonify({'error': 'Failed to connect to RabbitMQ service. Message wont be sent.'}), 500
             
@@ -520,4 +521,4 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
         db.session.commit()
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)

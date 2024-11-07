@@ -3,12 +3,24 @@ import requests
 import json
 from dotenv import load_dotenv
 import os
+import time
 
 from  mockup_generation import image_generation
 from  mockup_generation import mockup_generator
 
 load_dotenv()
 SERVER_URL = os.environ.get('FLASK_SERVER_URL')
+RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST')
+
+
+def connect_to_rabbitmq():
+    while True:
+        try:
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST, port=5672))
+            return connection
+        except pika.exceptions.AMQPConnectionError:
+            print("RabbitMQ is not available, retrying in 5 seconds...")
+            time.sleep(5)
 
 def callback(ch, method, properties, body):
     data = json.loads(body) # Data passed from the rabbitmq message
@@ -18,6 +30,9 @@ def callback(ch, method, properties, body):
 
     image = image_generation.generate_image(data['prompt']) # Returns image url
     mockup_data = mockup_generator.get_mockup_data(image)
+
+    print(SERVER_URL)
+    print(SERVER_URL + '/create-mockup')
 
     for mockup in mockup_data:
         data_mockup = {
@@ -40,7 +55,7 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag = method.delivery_tag)
 
 def start_consuming():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672))
+    connection = connect_to_rabbitmq()
     channel = connection.channel()
     channel.queue_declare('mockup_generation_queue', durable=True)
     print('waiting for messages')

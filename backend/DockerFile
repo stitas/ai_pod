@@ -1,0 +1,21 @@
+# Use a Python image
+FROM python:3.9
+
+# Set working directory
+WORKDIR /backend
+
+# Install dependencies
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+
+# Copy the rest of the application
+COPY . .
+
+# Expose port 5000 to access the backend
+EXPOSE 5000
+
+# Set working directory
+WORKDIR /backend/server
+
+# Start the Flask app
+CMD ["python", "app.py"]

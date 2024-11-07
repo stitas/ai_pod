@@ -123,7 +123,7 @@ export default function ProductList() {
                 {!taskComplete && (
                     <div className="loading-animation" >
                         <div className="spinner"></div>
-                        <h3 style={{color: "white", fontWeight: "bold", fontSize:"2rem"}}>Please wait, generating image...</h3>
+                        <h3 style={{color: "black", fontWeight: "bold", fontSize:"2rem"}}>Please wait, generating image...</h3>
                     </div>
                 )}
 

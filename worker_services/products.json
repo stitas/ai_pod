@@ -35,16 +35,16 @@
             "White"
         ],
         "mockup_image_paths":[
-            "t_shirt\\black.png",
-            "t_shirt\\cardinal.png",
-            "t_shirt\\carolina_blue.png",
-            "t_shirt\\charcoal.png",
-            "t_shirt\\gold.png",
-            "t_shirt\\irish_green.png",
-            "t_shirt\\natural.png",
-            "t_shirt\\navy.png",
-            "t_shirt\\orange.png",
-            "t_shirt\\white.png"
+            "t_shirt/black.png",
+            "t_shirt/cardinal.png",
+            "t_shirt/carolina_blue.png",
+            "t_shirt/charcoal.png",
+            "t_shirt/gold.png",
+            "t_shirt/irish_green.png",
+            "t_shirt/natural.png",
+            "t_shirt/navy.png",
+            "t_shirt/orange.png",
+            "t_shirt/white.png"
         ] 
     },
     {
@@ -79,14 +79,14 @@
             "White"
         ],
         "mockup_image_paths":[
-            "hoodie\\black.png",
-            "hoodie\\irish_green.png",
-            "hoodie\\light_pink.png",
-            "hoodie\\navy.png",
-            "hoodie\\red.png",
-            "hoodie\\royal.png",
-            "hoodie\\sport_grey.png",
-            "hoodie\\white.png"
+            "hoodie/black.png",
+            "hoodie/irish_green.png",
+            "hoodie/light_pink.png",
+            "hoodie/navy.png",
+            "hoodie/red.png",
+            "hoodie/royal.png",
+            "hoodie/sport_grey.png",
+            "hoodie/white.png"
         ] 
     },
     {
@@ -119,13 +119,13 @@
             "White"
         ],
         "mockup_image_paths":[
-            "sweatshirt\\black.png",
-            "sweatshirt\\light_pink.png",
-            "sweatshirt\\navy.png",
-            "sweatshirt\\red.png",
-            "sweatshirt\\royal.png",
-            "sweatshirt\\sport_grey.png",
-            "sweatshirt\\white.png"
+            "sweatshirt/black.png",
+            "sweatshirt/light_pink.png",
+            "sweatshirt/navy.png",
+            "sweatshirt/red.png",
+            "sweatshirt/royal.png",
+            "sweatshirt/sport_grey.png",
+            "sweatshirt/white.png"
         ] 
     },
     {
@@ -148,8 +148,8 @@
             "Oyster"
         ],
         "mockup_image_paths":[
-            "tote_bag\\black.png",
-            "tote_bag\\oyster.png"
+            "tote_bag/black.png",
+            "tote_bag/oyster.png"
         ] 
     },
     {
@@ -170,7 +170,7 @@
             "White"
         ],
         "mockup_image_paths":[
-            "mug\\mug.png"
+            "mug/mug.png"
         ] 
     }
 ]

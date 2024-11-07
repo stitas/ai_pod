@@ -50,7 +50,7 @@ def create_mockup(mockup_image_path, ai_image_url, position, product_id):
 
 # Generates a tuple of args for one product to pass into create mockup
 def generate_mockup_data(product, iteration, ai_image_url):
-    mockup_path = os.path.join(parent_dir, 'mockup_images\\' + product['mockup_image_paths'][iteration])
+    mockup_path = os.path.join(parent_dir, 'mockup_images/' + product['mockup_image_paths'][iteration])
     position = product['position_mockup']
     product_id = product['id']
 

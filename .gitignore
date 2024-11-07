@@ -1,4 +1,10 @@
-# Logs
+**/.env
+*.png
+*.jpg
+lol.py
+__pycache__
+instance
+
 logs
 *.log
 npm-debug.log*

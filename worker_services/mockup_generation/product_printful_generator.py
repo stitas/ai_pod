@@ -39,6 +39,8 @@ def create_product(image_url, variant_id, order_id, price):
 
     r = requests.post(URL_CREATE_PRODUCT, json=data, headers=HEADERS).json()
 
+    print(r)
+
     return r['result']['id']
 
 def get_printful_variant_id(product_id, size, color):
@@ -52,7 +54,7 @@ def get_printful_variant_id(product_id, size, color):
         
         # Mug
         if product_id == 19:
-            variant['did']
+            return variant['id']
 
         if variant['size'] == size and variant['color'] == color:
             return variant['id']

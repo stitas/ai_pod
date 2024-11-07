@@ -1,7 +1,0 @@
-**/.env
-*.txt
-*.png
-*.jpg
-lol.py
-__pycache__
-instance

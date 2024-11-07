@@ -1,7 +1,13 @@
 import pika
 import json
+import os
+from dotenv import load_dotenv
 
-from mockup_generation import product_printful_generator
+from mockup_generation import product_printful_generator, image_generation
+
+load_dotenv()
+
+RABBITMQ_HOST = os.environ.get('RABBITMQ_HOST')
 
 def callback(ch, method, properties, body):
     data = json.loads(body) # Data passed from the rabbitmq message
@@ -30,7 +36,7 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag = method.delivery_tag)
 
 def start_consuming():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', port=5672))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST, port=5672))
     channel = connection.channel()
     channel.queue_declare('product_printful_generation_queue', durable=True)
     print('waiting for messages')
