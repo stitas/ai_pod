@@ -3,7 +3,7 @@ import json
 import os
 from dotenv import load_dotenv
 
-from mockup_generation import product_printful_generator, image_generation
+from mockup_generation import product_printful_generator
 
 load_dotenv()
 

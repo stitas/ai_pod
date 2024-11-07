@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import axios from 'axios'
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 import { UserContext } from '../contexts/user_context'
 
 export default function AuthenticateWait() {
@@ -9,7 +9,6 @@ export default function AuthenticateWait() {
     const navigate = useNavigate()
     const queryParams = new URLSearchParams(location.search)
     const serverUrl = import.meta.env.VITE_SERVER_URL
-    const[user, setUser] = useState({})
 
     const authCode = queryParams.get('code')
     const error = queryParams.get('error')
@@ -29,12 +28,7 @@ export default function AuthenticateWait() {
             }
 
             const response = await axios.post(serverUrl + '/authorize-google', data, {withCredentials: true})
-
-            console.log(window.location.href)
-            console.log(authCode)
-            console.log(response.status)
-            console.log(error)
-
+            
             if(response.status === 200){
                 const userData = await getUser()
                 login(userData)

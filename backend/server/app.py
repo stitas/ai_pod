@@ -1,6 +1,6 @@
 import hashlib
 from flask import Flask, jsonify, request
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, set_access_cookies
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import pika
 import pika.exceptions
 from models import db, bcrypt, Image, Mockup, User, CartItem, Order
@@ -121,7 +121,6 @@ def authorize_google():
         response = requests.post(google_access_token_url, json=authorization_data).json()
 
         if 'access_token' not in response:
-            print(response)
             return jsonify({'error': 'Failed to exchange authorization code for access token'}), 401
         
         google_access_token = response['access_token']
@@ -173,7 +172,6 @@ def get_user():
     user = User.query.filter_by(id=user_id).first()
 
     if user:
-        print(user.serialize())
         data = user.serialize()
         return jsonify(data), 200
 
@@ -477,6 +475,7 @@ def check_cart_item_exists():
     else:
         return jsonify({'error': 'Invalid request. Use POST request'}), 400
 
+# Creates order in printful store
 @app.route('/create-order', methods=['POST'])
 def create_order():
     if request.method == 'POST':

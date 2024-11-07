@@ -31,9 +31,6 @@ def callback(ch, method, properties, body):
     image = image_generation.generate_image(data['prompt']) # Returns image url
     mockup_data = mockup_generator.get_mockup_data(image)
 
-    print(SERVER_URL)
-    print(SERVER_URL + '/create-mockup')
-
     for mockup in mockup_data:
         data_mockup = {
             'title': mockup['title'],
