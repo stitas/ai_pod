@@ -7,8 +7,8 @@ This web app is a print on demand dropshipping shop where a user can buy product
 - [x] Mockup generator of products with generated images
 - [x] Generating mockups in parallel to make it faster
 - [x] Creating order in printful store on checkout complete
-- [] Payment
-- [] Beautiful UI
+- [ ] Payment
+- [ ] Beautiful UI
 
 ## Stack
 
