@@ -31,3 +31,12 @@ cd ai_pod
 docker-compose build
 docker-compose up
 ```
+
+## Project preview
+
+![](https://raw.githubusercontent.com/stitas/ai_pod/refs/heads/main/preview_images/img0.png)
+![](https://raw.githubusercontent.com/stitas/ai_pod/refs/heads/main/preview_images/img1.png)
+![](https://raw.githubusercontent.com/stitas/ai_pod/refs/heads/main/preview_images/img2.png)
+![](https://raw.githubusercontent.com/stitas/ai_pod/refs/heads/main/preview_images/img3.png)
+![](https://raw.githubusercontent.com/stitas/ai_pod/refs/heads/main/preview_images/img4.png)
+![](https://raw.githubusercontent.com/stitas/ai_pod/refs/heads/main/preview_images/img5.png)

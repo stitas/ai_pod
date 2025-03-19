@@ -1,5 +1,4 @@
 **/.env
-*.png
 *.jpg
 lol.py
 __pycache__
